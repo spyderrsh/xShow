@@ -1,18 +1,29 @@
 package com.spyderrsh.xshow
 
+import com.spyderrsh.xshow.filesystem.FileSystemBrowser
+import com.spyderrsh.xshow.ui.ShowLoading
+import com.spyderrsh.xshow.ui.UnsupportedState
 import io.kvision.Application
 import io.kvision.CoreModule
 import io.kvision.BootstrapModule
 import io.kvision.BootstrapCssModule
 import io.kvision.ToastifyModule
+import io.kvision.core.LineBreak
 import io.kvision.html.Span
+import io.kvision.html.div
+import io.kvision.html.p
 import io.kvision.module
 import io.kvision.panel.root
 import io.kvision.startApplication
+import io.kvision.state.bind
+import io.kvision.state.insert
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import org.koin.core.Koin
+import org.koin.core.KoinApplication
+import org.koin.core.component.KoinComponent
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.context.unloadKoinModules
@@ -27,18 +38,29 @@ class App : Application() {
 
         }
     }
+
     private val loadedModules = mutableListOf<Module>()
 
     override fun start(state: Map<String, Any>) {
-        val root = root("kvapp") {
-        }
 
         AppScope.launch {
-            val rootFolder = Model.getRootFolder()
+//            val rootFolder = Model.getRootFolder().also { println(it) }
             loadedModules.addAll(
-                listOf(appModule(rootFolder))
+                listOf(appModule())
             )
             loadKoinModules(loadedModules)
+        val component = AppComponent()
+
+        root("kvapp") {
+            div().bind(component.appViewModel.appState) {
+                when(it){
+                    is AppState.Starting -> ShowLoading()
+                    is AppState.FileBrowser -> FileSystemBrowser(it.startFolder)
+                    else -> UnsupportedState(it)
+                }
+            }
+
+        }
 
         }
     }

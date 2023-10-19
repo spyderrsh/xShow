@@ -16,5 +16,6 @@ object Model {
     }
 
     suspend fun getRootFolder(): FileModel.Folder = fileSystemService.getRootFolder()
+    suspend fun getFiles(folder: FileModel.Folder) = fileSystemService.getFolderContents(folder).sortedBy { it.shortName.lowercase() }
 
 }

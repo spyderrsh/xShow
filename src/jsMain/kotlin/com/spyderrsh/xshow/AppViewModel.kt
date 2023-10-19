@@ -4,9 +4,10 @@ import io.kvision.redux.TypedReduxStore
 import kotlinx.coroutines.launch
 
 class AppViewModel(
-    appStateStoreProvider: AppStateStoreProvider
+    private val stateStore: TypedReduxStore<AppState, AppAction>
 ) {
-    private val stateStore = appStateStoreProvider.get()
+
+    val appState get() = stateStore
     
     init {
 

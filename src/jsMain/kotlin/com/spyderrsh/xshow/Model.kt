@@ -1,5 +1,6 @@
 package com.spyderrsh.xshow
 
+import com.spyderrsh.xshow.model.FileModel
 import com.spyderrsh.xshow.service.IFileSystemService
 import com.spyderrsh.xshow.service.ISlideshowService
 import io.kvision.remote.getService
@@ -13,5 +14,7 @@ object Model {
     suspend fun ping(message: String): String {
         return pingService.ping(message)
     }
+
+    suspend fun getRootFolder(): FileModel.Folder = fileSystemService.getRootFolder()
 
 }

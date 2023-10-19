@@ -20,6 +20,7 @@ repositories {
 // Versions
 val kotlinVersion: String by System.getProperties()
 val kvisionVersion: String by System.getProperties()
+val koinVersion: String by System.getProperties()
 val ktorVersion: String by project
 val logbackVersion: String by project
 
@@ -101,6 +102,7 @@ kotlin {
                 implementation("io.kvision:kvision-state:$kvisionVersion")
                 implementation("io.kvision:kvision-state-flow:$kvisionVersion")
                 implementation("io.kvision:kvision-redux-kotlin:$kvisionVersion")
+                implementation("io.insert-koin:koin-core:$koinVersion")
             }
         }
         val jsTest by getting {

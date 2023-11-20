@@ -1,3 +1,4 @@
 {
-  "root": "J:/All/"
+  "root": "J:/All/",
+  "static_path" : "xstatic"
 }

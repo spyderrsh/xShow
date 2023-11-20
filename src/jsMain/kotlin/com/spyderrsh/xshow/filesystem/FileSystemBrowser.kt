@@ -55,12 +55,15 @@ fun Container.ShowFile(file: FileModel) {
     div {
         when (file) {
             is FileModel.Folder -> ShowFolder(file)
-            else -> span("${file::class.simpleName}: ${file.shortName}${if (file is FileModel.Media) ".${file.extension}" else ""}")
+            is FileModel.Media -> ShowMedia(file)
         }
     }
 
 }
 
+private fun Container.ShowMedia(file: FileModel.Media) {
+    internalLink("${file::class.simpleName}: ${file.shortName}.${file.extension}", url = file.serverPath)
+}
 private fun Container.ShowFolder(folder: FileModel.Folder) {
     span("Folder: ")
     internalLink(folder.shortName){

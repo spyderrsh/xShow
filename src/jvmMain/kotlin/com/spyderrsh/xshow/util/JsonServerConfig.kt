@@ -19,4 +19,7 @@ class DefaultServerConfig : ServerConfig by Json.decodeFromStream<JsonServerConf
 }
 
 @Serializable
-private data class JsonServerConfig(@SerialName("root") override val rootFolderPath: String) : ServerConfig
+private data class JsonServerConfig(
+    @SerialName("root") override val rootFolderPath: String,
+    @SerialName("static_path") override val staticPath: String
+) : ServerConfig

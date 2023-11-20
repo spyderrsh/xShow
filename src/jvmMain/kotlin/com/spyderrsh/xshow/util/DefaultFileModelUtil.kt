@@ -5,7 +5,7 @@ import com.spyderrsh.xshow.model.FileModel
 import io.ktor.http.*
 import java.io.File
 
-class DefaultFileModelUtil(serverConfig: ServerConfig) : XShowFileModelUtil {
+class DefaultFileModelUtil(private val serverConfig: ServerConfig) : XShowFileModelUtil {
 
     private val rootFile = File(serverConfig.rootFolderPath).absoluteFile
 
@@ -68,7 +68,7 @@ class DefaultFileModelUtil(serverConfig: ServerConfig) : XShowFileModelUtil {
     }
 
     private fun File.getServerPath(): String {
-        return this.relativeTo(rootFile).path.encodeURLPath()
+        return serverConfig.staticPath+"/"+this.relativeTo(rootFile).path.replace('\\','/').encodeURLPath()
     }
 }
 

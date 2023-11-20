@@ -9,6 +9,7 @@ import com.spyderrsh.xshow.util.DefaultFileModelUtil
 import com.spyderrsh.xshow.util.DefaultServerConfig
 import com.spyderrsh.xshow.util.XShowFileModelUtil
 import io.ktor.server.application.*
+import io.ktor.server.http.content.*
 import io.ktor.server.plugins.compression.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
@@ -21,6 +22,7 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import java.io.File
 
 fun Application.main() {
     install(Compression)
@@ -33,6 +35,7 @@ fun Application.main() {
 
     routing {
         getAllServiceManagers().forEach { applyRoutes(it) }
+        addStaticRoutes()
     }
 
     val module = module {
@@ -51,4 +54,10 @@ fun Application.main() {
 
     }
     kvisionInit(module)
+}
+
+private fun Routing.addStaticRoutes() {
+    // TODO Figure out how to use the same DefaultServerConfig from Koin
+    val config = DefaultServerConfig()
+    staticFiles(config.staticPath, File(DefaultServerConfig().rootFolderPath))
 }

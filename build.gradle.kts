@@ -52,6 +52,10 @@ kotlin {
                     port = 3000,
                     proxy = mutableMapOf(
                         "/kv/*" to "http://localhost:8080",
+                        "/xstatic/*" to mapOf(
+                            "target" to "http://localhost:8080",
+                            "router" to "http://localhost:3000",
+                        ),
                         "/kvsse/*" to "http://localhost:8080",
                         "/kvws/*" to mapOf("target" to "ws://localhost:8080", "ws" to true)
                     ),
@@ -86,6 +90,7 @@ kotlin {
                 implementation("io.ktor:ktor-server-compression:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
+                implementation("net.bramp.ffmpeg:ffmpeg:0.8.0")
             }
         }
         val jvmTest by getting {

@@ -19,7 +19,7 @@ object FileSystemBrowserModule {
 }
 fun Module.fileSystemBrowserModule() {
     single(NAMED_BROWSER_STATE) {
-        createTypedReduxStore(::fileSystemBrowserReducer, FileSystemBrowserState.Starting)
+        createTypedReduxStore(::fileSystemBrowserReducer, FileSystemBrowserState())
     }
     single(NAMED_BROWSER_STATE) {
         CoroutineScope(Dispatchers.Default + SupervisorJob())

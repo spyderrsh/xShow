@@ -5,13 +5,19 @@ import com.spyderrsh.xshow.slideshow.SlideshowOptions
 import io.kvision.redux.RAction
 import org.reduxkotlin.TypedReducer
 
-sealed interface AppState {
-    data object Starting : AppState
 
-    data class ErrorState(val error: Throwable, val lastGoodState: AppState) : AppState
-    data class FileBrowser(val startFolder: FileModel.Folder) : AppState
-    data class Slideshow(val slideshowOptions: SlideshowOptions) : AppState
+data class AppState(
+    val currentScreen: AppScreen = AppScreen.FileSystemBrowser,
+    val rootFolder: FileModel.Folder? = null,
+    val slideshowOptions: SlideshowOptions? = null,
+    val errors: List<Throwable> = emptyList()
+)
+
+enum class AppScreen {
+    FileSystemBrowser,
+    SlideShow
 }
+
 
 sealed interface AppAction : RAction {
     data class ReceivedRootFolder(val startFolder: FileModel.Folder) : AppAction
@@ -27,15 +33,13 @@ fun appReducer(state: AppState, action: AppAction): AppState {
     }
 }
 
-fun reduceReceivedRootFolder(state: AppState, action: AppAction.ReceivedRootFolder): AppState = when (state) {
-    else -> AppState.FileBrowser(action.startFolder)
-}
+fun reduceReceivedRootFolder(state: AppState, action: AppAction.ReceivedRootFolder): AppState =
+    state.copy(rootFolder = action.startFolder)
+
 
 fun reduceFailedToReceiveRootFolder(state: AppState, action: AppAction.FailedToReceiveRootFolder): AppState =
-    when (state) {
-        else -> AppState.ErrorState(action.e, state)
-    }
+    state.copy(errors = state.errors + action.e)
 
-private fun reduceStartSlideshow(state: AppState, action: AppAction.StartSlideshow): AppState = when (state) {
-    else -> AppState.Slideshow(action.slideshowOptions)
-}
+private fun reduceStartSlideshow(state: AppState, action: AppAction.StartSlideshow): AppState =
+    state.copy(currentScreen = AppScreen.SlideShow, slideshowOptions = action.slideshowOptions)
+

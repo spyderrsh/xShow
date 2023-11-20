@@ -19,22 +19,15 @@ class FileSystemBrowserViewModel(
 
     init {
         stateStore.subscribe { state ->
-            when (state) {
-                is FileSystemBrowserState.LoadingFolder -> {
-                    stateStore.dispatch { dispatch, getState ->
-                        scope.launch {
-                            runCatching { Model.getFiles(state.loadingFolder) }
-                                .onSuccess { dispatch(FileSystemBrowserAction.FolderLoaded(it)) }
-                                .onFailure { dispatch(FileSystemBrowserAction.FailedToLoad(it)) }
-                        }
+            state.loadingFolder?.let {
+                stateStore.dispatch { dispatch, getState ->
+                    scope.launch {
+                        runCatching { Model.getFiles(it) }
+                            .onSuccess { dispatch(FileSystemBrowserAction.FolderLoaded(it)) }
+                            .onFailure { dispatch(FileSystemBrowserAction.FailedToLoad(it)) }
                     }
                 }
-
-                else -> {
-                    /* no-op */
-                }
             }
-
         }
     }
 }

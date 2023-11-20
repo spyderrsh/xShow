@@ -53,9 +53,13 @@ class App : Application() {
 
         root("kvapp") {
             div().bind(component.appViewModel.appState) {
-                when(it){
-                    is AppState.Starting -> ShowLoading()
-                    is AppState.FileBrowser -> FileSystemBrowser(it.startFolder)
+                when {
+                    it.currentScreen == AppScreen.FileSystemBrowser && it.rootFolder == null -> {
+                        ShowLoading()
+                    }
+                    it.currentScreen == AppScreen.FileSystemBrowser && it.rootFolder != null -> {
+                        FileSystemBrowser(it.rootFolder)
+                    }
                     else -> UnsupportedState(it)
                 }
             }

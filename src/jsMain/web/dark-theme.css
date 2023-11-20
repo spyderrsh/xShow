@@ -88,6 +88,14 @@ img {
 	max-width: 100%;
 }
 
+.tint-icon {
+    filter: invert(42%) sepia(97%) saturate(1035%) hue-rotate(86deg) brightness(103%) contrast(90%);
+}
+
+.tint-icon:active {
+    filter: invert(43%) sepia(81%) saturate(5156%) hue-rotate(105deg) brightness(60%) contrast(87%);
+}
+
 li {
 	line-height: 1.5em;
 }

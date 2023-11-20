@@ -16,7 +16,7 @@ object AppModule {
 
 fun appModule() = module {
     single(NAMED_APP_STATE) {
-        createTypedReduxStore(::appReducer, AppState.Starting )
+        createTypedReduxStore(::appReducer, AppState() )
     }
     single { AppViewModel(get(qualifier = NAMED_APP_STATE)) }
     fileSystemBrowserModule()

@@ -3,42 +3,30 @@ package com.spyderrsh.xshow.filesystem
 import com.spyderrsh.xshow.model.FileModel
 import io.kvision.redux.RAction
 
-sealed interface FileSystemBrowserState {
-
-    private fun handleUnsupportedAction(action: FileSystemBrowserAction): FileSystemBrowserState =
-        ErrorState(UnsupportedOperationException("$this cannot handle action $action"), this)
+data class FileSystemBrowserState(
+    val currentFolder: FileModel.Folder? = null,
+    val currentFiles: List<FileModel> = emptyList(),
+    val loadingFolder: FileModel.Folder? = null,
+    val errors: List<Throwable> = emptyList()
+) {
 
     fun handleLoadingFolderStarted(action: FileSystemBrowserAction.LoadingFolderStarted): FileSystemBrowserState =
-        handleUnsupportedAction(action)
+        copy(loadingFolder = action.folderToLoad)
 
     fun handleFolderLoaded(action: FileSystemBrowserAction.FolderLoaded): FileSystemBrowserState =
-        handleUnsupportedAction(action)
+        copy(
+            currentFolder = loadingFolder,
+            loadingFolder = null,
+            currentFiles = action.files
+        )
 
     fun handleFailedToLoad(action: FileSystemBrowserAction.FailedToLoad): FileSystemBrowserState =
-        ErrorState(action.error, this)
+        copy(
+            errors = errors + action.error,
+            loadingFolder = null
+        )
 
-    data object Starting : FileSystemBrowserState {
-        override fun handleLoadingFolderStarted(action: FileSystemBrowserAction.LoadingFolderStarted): FileSystemBrowserState {
-            return LoadingFolder(action.folderToLoad, null)
-        }
-    }
-
-    data class LoadingFolder(val loadingFolder: FileModel.Folder, val currentFiles: Files?) : FileSystemBrowserState {
-        override fun handleLoadingFolderStarted(action: FileSystemBrowserAction.LoadingFolderStarted): FileSystemBrowserState {
-            return LoadingFolder(action.folderToLoad, currentFiles)
-        }
-
-        override fun handleFolderLoaded(action: FileSystemBrowserAction.FolderLoaded): FileSystemBrowserState {
-            return Files(loadingFolder, action.files)
-        }
-    }
-
-    data class ErrorState(val error: Throwable, val lastGoodState: FileSystemBrowserState) : FileSystemBrowserState
-    data class Files(val currentFolder: FileModel.Folder, val files: List<FileModel>) : FileSystemBrowserState {
-        override fun handleLoadingFolderStarted(action: FileSystemBrowserAction.LoadingFolderStarted): FileSystemBrowserState {
-            return LoadingFolder(action.folderToLoad, this)
-        }
-    }
+    val isLoading = loadingFolder != null
 }
 
 sealed interface FileSystemBrowserAction : RAction {

@@ -12,6 +12,7 @@ import io.ktor.server.application.*
 import io.ktor.server.http.content.*
 import io.ktor.server.plugins.compression.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.partialcontent.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.kvision.remote.applyRoutes
@@ -32,6 +33,7 @@ fun Application.main() {
             cookie.extensions["SameSite"] = "strict"
         }
     }
+    install(PartialContent)
 
     routing {
         getAllServiceManagers().forEach { applyRoutes(it) }

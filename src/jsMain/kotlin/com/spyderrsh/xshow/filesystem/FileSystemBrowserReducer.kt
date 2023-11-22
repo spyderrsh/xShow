@@ -7,7 +7,8 @@ data class FileSystemBrowserState(
     val currentFolder: FileModel.Folder? = null,
     val currentFiles: List<FileModel> = emptyList(),
     val loadingFolder: FileModel.Folder? = null,
-    val errors: List<Throwable> = emptyList()
+    val errors: List<Throwable> = emptyList(),
+    val overlayFile: FileModel.Media? = null
 ) {
 
     fun handleLoadingFolderStarted(action: FileSystemBrowserAction.LoadingFolderStarted): FileSystemBrowserState =
@@ -26,6 +27,14 @@ data class FileSystemBrowserState(
             loadingFolder = null
         )
 
+    fun handleShowOverlay(action: FileSystemBrowserAction.ShowOverlay): FileSystemBrowserState = copy(
+        overlayFile = action.file
+    )
+
+    fun handleHideOverlay(action: FileSystemBrowserAction.HideOverlay): FileSystemBrowserState = copy(
+        overlayFile = null
+    )
+
     val isLoading = loadingFolder != null
 }
 
@@ -33,6 +42,9 @@ sealed interface FileSystemBrowserAction : RAction {
     data class LoadingFolderStarted(val folderToLoad: FileModel.Folder) : FileSystemBrowserAction
     data class FolderLoaded(val files: List<FileModel>) : FileSystemBrowserAction
     data class FailedToLoad(val error: Throwable) : FileSystemBrowserAction
+
+    data class ShowOverlay(val file: FileModel.Media): FileSystemBrowserAction
+    object HideOverlay : FileSystemBrowserAction
 }
 
 fun fileSystemBrowserReducer(
@@ -43,6 +55,8 @@ fun fileSystemBrowserReducer(
         is FileSystemBrowserAction.LoadingFolderStarted -> state.handleLoadingFolderStarted(action)
         is FileSystemBrowserAction.FolderLoaded -> state.handleFolderLoaded(action)
         is FileSystemBrowserAction.FailedToLoad -> state.handleFailedToLoad(action)
+        is FileSystemBrowserAction.ShowOverlay -> state.handleShowOverlay(action)
+        is FileSystemBrowserAction.HideOverlay -> state.handleHideOverlay(action)
     }
 }
 

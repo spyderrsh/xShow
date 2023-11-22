@@ -88,6 +88,7 @@ kotlin {
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
                 implementation("io.ktor:ktor-server-auth:$ktorVersion")
                 implementation("io.ktor:ktor-server-compression:$ktorVersion")
+                implementation("io.ktor:ktor-server-partial-content:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
                 implementation("net.bramp.ffmpeg:ffmpeg:0.8.0")

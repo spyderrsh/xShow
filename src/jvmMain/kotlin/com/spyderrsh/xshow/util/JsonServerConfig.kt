@@ -6,7 +6,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
-import java.io.File
 import java.util.logging.Logger
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -21,5 +20,6 @@ class DefaultServerConfig : ServerConfig by Json.decodeFromStream<JsonServerConf
 @Serializable
 private data class JsonServerConfig(
     @SerialName("root") override val rootFolderPath: String,
-    @SerialName("static_path") override val staticPath: String
+    @SerialName("static_path") override val staticPath: String,
+    @SerialName("db_path") override val dbPath: String
 ) : ServerConfig

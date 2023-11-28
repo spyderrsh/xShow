@@ -1,4 +1,5 @@
 {
   "root": "J:/All/",
-  "static_path" : "xstatic"
+  "static_path" : "xstatic",
+  "db_path" : "C:/xshow/xshow.db"
 }

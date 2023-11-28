@@ -29,5 +29,5 @@ build/
 
 # Gradle
 .gradle/
-/logs/archived/ktor.2023-10-18.0.log.gz
+/logs/archived/
 /.kotlin-js-store/yarn.lock

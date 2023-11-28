@@ -23,6 +23,7 @@ val kvisionVersion: String by System.getProperties()
 val koinVersion: String by System.getProperties()
 val ktorVersion: String by project
 val logbackVersion: String by project
+val exposedVersion: String by project
 
 val mainClassName = "io.ktor.server.netty.EngineMain"
 
@@ -74,6 +75,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api("io.kvision:kvision-server-ktor-koin:$kvisionVersion")
+                api("io.insert-koin:koin-core:$koinVersion")
             }
         }
         val commonTest by getting {
@@ -92,6 +94,17 @@ kotlin {
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
                 implementation("net.bramp.ffmpeg:ffmpeg:0.8.0")
+
+                implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+                implementation("org.jetbrains.exposed:exposed-crypt:$exposedVersion")
+                implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+                implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+                implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
+                implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
+                implementation("org.xerial:sqlite-jdbc:3.30.1")
+
+                api( "io.insert-koin:koin-logger-slf4j:$koinVersion")
+
             }
         }
         val jvmTest by getting {

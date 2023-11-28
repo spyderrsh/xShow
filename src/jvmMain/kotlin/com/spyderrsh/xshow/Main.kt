@@ -1,13 +1,21 @@
 package com.spyderrsh.xshow
 
+import com.spyderrsh.xshow.db.DatabaseInitializer
+import com.spyderrsh.xshow.db.MediaDbDataSource
+import com.spyderrsh.xshow.media.DefaultMediaRepository
+import com.spyderrsh.xshow.media.MediaRepository
 import com.spyderrsh.xshow.model.XShowSession
+import com.spyderrsh.xshow.scanner.DirectoryScanner
+import com.spyderrsh.xshow.scanner.ScannerModule
 import com.spyderrsh.xshow.service.FileSystemService
 import com.spyderrsh.xshow.service.SlideshowService
 import com.spyderrsh.xshow.service.filesystem.DefaultFilesystemRepository
 import com.spyderrsh.xshow.service.filesystem.FilesystemRepository
-import com.spyderrsh.xshow.util.DefaultFileModelUtil
+import com.spyderrsh.xshow.slideshow.SlideshowModule
+import com.spyderrsh.xshow.slideshow.SlideshowSessionManager
 import com.spyderrsh.xshow.util.DefaultServerConfig
-import com.spyderrsh.xshow.util.XShowFileModelUtil
+import com.spyderrsh.xshow.util.UtilModule
+import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
 import io.ktor.server.plugins.compression.*
@@ -17,14 +25,20 @@ import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.kvision.remote.applyRoutes
 import io.kvision.remote.getAllServiceManagers
-import io.kvision.remote.kvisionInit
-import io.netty.util.internal.ResourcesUtil
+import io.kvision.remote.initStaticResources
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.createdAtStart
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import org.koin.ktor.ext.inject
+import org.koin.ktor.plugin.Koin
+import org.koin.ktor.plugin.KoinApplicationStarted
+import org.koin.logger.slf4jLogger
 import java.io.File
 
+@OptIn(ExperimentalCoroutinesApi::class)
 fun Application.main() {
     install(Compression)
     install(Sessions) {
@@ -35,31 +49,77 @@ fun Application.main() {
     }
     install(PartialContent)
 
-    routing {
-        getAllServiceManagers().forEach { applyRoutes(it) }
-        addStaticRoutes()
+    environment.monitor.subscribe(KoinApplicationStarted) {
+        log.info("Koin started")
+        initializeDatabase()
+        startDirAnalyzer()
+    }
+
+    environment.monitor.subscribe(DirectoryScanner.DirectoryScanFinished){
+        startSlideshowSession()
     }
 
     val module = module {
-        singleOf(::DefaultServerConfig){
+        includes(ScannerModule, UtilModule, SlideshowModule)
+        singleOf(::DefaultServerConfig) {
+            createdAtStart()
             bind<ServerConfig>()
         }
-        singleOf(::DefaultFileModelUtil){
-            bind<XShowFileModelUtil>()
-        }
-        singleOf(::DefaultFilesystemRepository){
+        singleOf(::DefaultFilesystemRepository) {
+            createdAtStart()
             bind<FilesystemRepository>()
         }
+        singleOf(::DefaultMediaRepository) {
+            createdAtStart()
+            bind<MediaRepository>()
+        }
+        singleOf(::MediaDbDataSource) {
+            createdAtStart()
+        }
+        singleOf(::DatabaseInitializer) {
+            createdAtStart()
+        }
+
         factoryOf(::PingService)
         factoryOf(::FileSystemService)
         factoryOf(::SlideshowService)
 
     }
-    kvisionInit(module)
+    install(ContentNegotiation) {
+        json(DefaultJson)
+    }
+
+    initStaticResources()
+
+    install(Koin) {
+        slf4jLogger(level = org.koin.core.logger.Level.ERROR)
+        modules(KoinModule.applicationModule(this@main), module)
+    }
+
+
+    routing {
+        getAllServiceManagers().forEach { applyRoutes(it) }
+        addStaticRoutes()
+    }
+}
+
+fun Application.startSlideshowSession() {
+    log.info("Starting Slideshow Session Manager")
+    val slideshowSessionManager by inject<SlideshowSessionManager>()
+    slideshowSessionManager.initialize()
+}
+
+fun Application.startDirAnalyzer() {
+    val scanner by inject<DirectoryScanner>()
+    scanner.start()
 }
 
 private fun Routing.addStaticRoutes() {
-    // TODO Figure out how to use the same DefaultServerConfig from Koin
-    val config = DefaultServerConfig()
+    val config by inject<ServerConfig>()
     staticFiles(config.staticPath, File(DefaultServerConfig().rootFolderPath))
+}
+
+private fun Application.initializeDatabase() {
+    val databaseInitializer by inject<DatabaseInitializer>()
+    databaseInitializer.initialize()
 }

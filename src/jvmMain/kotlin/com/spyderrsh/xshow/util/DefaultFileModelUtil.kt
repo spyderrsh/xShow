@@ -4,6 +4,7 @@ import com.spyderrsh.xshow.ServerConfig
 import com.spyderrsh.xshow.model.FileModel
 import io.ktor.http.*
 import java.io.File
+import kotlin.time.Duration
 
 class DefaultFileModelUtil(private val serverConfig: ServerConfig) : XShowFileModelUtil {
 
@@ -31,13 +32,13 @@ class DefaultFileModelUtil(private val serverConfig: ServerConfig) : XShowFileMo
         )
     }
 
-    override fun createVideoFromFile(file: File): FileModel.Media.Video {
+    override fun createVideoFromFile(file: File, duration: Duration?): FileModel.Media.Video.Full {
         return FileModel.Media.Video.Full(
             file.absolutePath,
             serverPath = file.getServerPath(),
             shortName = file.nameWithoutExtension,
             extension = file.extension.lowercase(),
-            duration = null
+            duration = duration
         )
     }
 

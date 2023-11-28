@@ -14,7 +14,10 @@ class DefaultSlideshowSessionManager(
     private val config: ServerConfig,
 ) : SlideshowSessionManager {
     private val scope = CoroutineScope(SupervisorJob())
+    private var position: Int = 0
     private val _slideshowMedia = mutableListOf<FileModel.Media>()
+
+
     override fun initialize() {
         resetSession()
         addAllItemsToSlideshow()
@@ -43,5 +46,23 @@ class DefaultSlideshowSessionManager(
 
     private fun resetSession() {
         _slideshowMedia.clear()
+    }
+
+    override fun getNextItem(): FileModel.Media {
+        // Increment counter
+        ++position
+        // get Item
+        return currentItem()
+    }
+
+    private fun currentItem(): FileModel.Media {
+        return _slideshowMedia[position % _slideshowMedia.count()]
+    }
+
+    override fun getPreviousItem(): FileModel.Media {
+        // Decrement counter
+        --position
+        // Get Item
+        return currentItem()
     }
 }

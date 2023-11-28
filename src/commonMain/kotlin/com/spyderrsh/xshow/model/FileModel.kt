@@ -51,7 +51,7 @@ sealed interface FileModel {
                 override val path: String
                     get() = parent.path
                 override val serverPath: String
-                    get() = TODO("Not yet implemented")
+                    get() = "${parent.serverPath}#t=$startTime,$endTime"
                 override val shortName: String
                     get() = "${parent.shortName}:$startTime-$endTime"
                 override val extension: String

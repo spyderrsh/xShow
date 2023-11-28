@@ -3,7 +3,6 @@ package com.spyderrsh.xshow.service.filesystem
 import com.spyderrsh.xshow.ServerConfig
 import com.spyderrsh.xshow.model.FileModel
 import com.spyderrsh.xshow.util.DefaultFileModelUtil
-import com.spyderrsh.xshow.util.toFile
 import java.util.logging.Logger
 
 class DefaultFilesystemRepository(
@@ -11,7 +10,10 @@ class DefaultFilesystemRepository(
     private val fileUtil: DefaultFileModelUtil
 ) : FilesystemRepository {
     override fun getRootFolder(): FileModel.Folder {
-        return fileUtil.createFolderFromPath(serverConfig.rootFolderPath)
+        Logger.getGlobal().info("Root file requested")
+        return fileUtil.createFolderFromPath(serverConfig.rootFolderPath).also {
+            Logger.getGlobal().info("Root file returning: $it")
+        }
     }
 
     override fun getFolderContents(folder: FileModel.Folder): List<FileModel> {

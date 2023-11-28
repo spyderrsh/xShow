@@ -15,17 +15,15 @@ import com.spyderrsh.xshow.slideshow.SlideshowModule
 import com.spyderrsh.xshow.slideshow.SlideshowSessionManager
 import com.spyderrsh.xshow.util.DefaultServerConfig
 import com.spyderrsh.xshow.util.UtilModule
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
 import io.ktor.server.plugins.compression.*
-import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.partialcontent.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.kvision.remote.applyRoutes
 import io.kvision.remote.getAllServiceManagers
-import io.kvision.remote.initStaticResources
+import io.kvision.remote.kvisionInit
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.createdAtStart
@@ -33,9 +31,7 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.koin.ktor.ext.inject
-import org.koin.ktor.plugin.Koin
 import org.koin.ktor.plugin.KoinApplicationStarted
-import org.koin.logger.slf4jLogger
 import java.io.File
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -53,10 +49,17 @@ fun Application.main() {
         log.info("Koin started")
         initializeDatabase()
         startDirAnalyzer()
+        routing {
+            addStaticRoutes()
+        }
     }
 
     environment.monitor.subscribe(DirectoryScanner.DirectoryScanFinished){
         startSlideshowSession()
+    }
+
+    routing {
+        getAllServiceManagers().forEach { applyRoutes(it) }
     }
 
     val module = module {
@@ -85,22 +88,8 @@ fun Application.main() {
         factoryOf(::SlideshowService)
 
     }
-    install(ContentNegotiation) {
-        json(DefaultJson)
-    }
 
-    initStaticResources()
-
-    install(Koin) {
-        slf4jLogger(level = org.koin.core.logger.Level.ERROR)
-        modules(KoinModule.applicationModule(this@main), module)
-    }
-
-
-    routing {
-        getAllServiceManagers().forEach { applyRoutes(it) }
-        addStaticRoutes()
-    }
+    kvisionInit(module)
 }
 
 fun Application.startSlideshowSession() {

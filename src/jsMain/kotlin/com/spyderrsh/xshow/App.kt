@@ -1,29 +1,17 @@
 package com.spyderrsh.xshow
 
 import com.spyderrsh.xshow.filesystem.FileSystemBrowser
+import com.spyderrsh.xshow.slideshow.Slideshow
 import com.spyderrsh.xshow.ui.ShowLoading
 import com.spyderrsh.xshow.ui.UnsupportedState
-import io.kvision.Application
-import io.kvision.CoreModule
-import io.kvision.BootstrapModule
-import io.kvision.BootstrapCssModule
-import io.kvision.ToastifyModule
-import io.kvision.core.LineBreak
-import io.kvision.html.Span
+import io.kvision.*
 import io.kvision.html.div
-import io.kvision.html.p
-import io.kvision.module
 import io.kvision.panel.root
-import io.kvision.startApplication
 import io.kvision.state.bind
-import io.kvision.state.insert
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import org.koin.core.Koin
-import org.koin.core.KoinApplication
-import org.koin.core.component.KoinComponent
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.context.unloadKoinModules
@@ -53,12 +41,16 @@ class App : Application() {
 
         root("kvapp") {
             div().bind(component.appViewModel.appState) {
+                println(it)
                 when {
                     it.currentScreen == AppScreen.FileSystemBrowser && it.rootFolder == null -> {
                         ShowLoading()
                     }
                     it.currentScreen == AppScreen.FileSystemBrowser && it.rootFolder != null -> {
                         FileSystemBrowser(it.rootFolder)
+                    }
+                    it.currentScreen == AppScreen.SlideShow -> {
+                        Slideshow()
                     }
                     else -> UnsupportedState(it)
                 }

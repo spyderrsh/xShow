@@ -1,5 +1,6 @@
 {
   "root": "J:/All/",
   "static_path" : "xstatic",
-  "db_path" : "C:/xshow/xshow.db"
+  "db_path": "C:/xshow/xshow.db",
+  "trash_path": "J:/.deleted/"
 }

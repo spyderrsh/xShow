@@ -21,5 +21,6 @@ class DefaultServerConfig : ServerConfig by Json.decodeFromStream<JsonServerConf
 private data class JsonServerConfig(
     @SerialName("root") override val rootFolderPath: String,
     @SerialName("static_path") override val staticPath: String,
-    @SerialName("db_path") override val dbPath: String
+    @SerialName("db_path") override val dbPath: String,
+    @SerialName("trash_path") override val trashPath: String
 ) : ServerConfig

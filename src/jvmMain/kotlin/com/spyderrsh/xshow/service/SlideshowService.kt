@@ -4,7 +4,9 @@ import com.spyderrsh.xshow.model.FileModel
 import com.spyderrsh.xshow.slideshow.SlideshowSessionManager
 
 @Suppress("ACTUAL_WITHOUT_EXPECT")
-actual class SlideshowService(private val slideshowSessionManager: SlideshowSessionManager) : ISlideshowService {
+actual class SlideshowService(
+    private val slideshowSessionManager: SlideshowSessionManager,
+) : ISlideshowService {
     override suspend fun nextMedia(): FileModel.Media {
         return slideshowSessionManager.getNextItem()
     }
@@ -15,5 +17,9 @@ actual class SlideshowService(private val slideshowSessionManager: SlideshowSess
 
     override suspend fun previousMedia(): FileModel.Media {
         return slideshowSessionManager.getPreviousItem()
+    }
+
+    override suspend fun deleteMedia(media: FileModel.Media) {
+        slideshowSessionManager.deleteItem(media)
     }
 }

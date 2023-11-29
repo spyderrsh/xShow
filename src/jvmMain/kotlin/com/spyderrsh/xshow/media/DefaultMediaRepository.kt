@@ -85,6 +85,23 @@ class DefaultMediaRepository(
         }
     }
 
+    override suspend fun deleteItem(transaction: Transaction, media: FileModel.Media): Result<Unit> {
+        return runCatching {
+            when (media) {
+                is FileModel.Media.Image -> deleteImage(transaction, media)
+                is FileModel.Media.Video -> deleteVideo(transaction, media)
+            }
+        }
+    }
+
+    private suspend fun deleteVideo(transaction: Transaction, media: FileModel.Media.Video) {
+        mediaDbDataSource.deleteVideoByPath(transaction, media)
+    }
+
+    private suspend fun deleteImage(transaction: Transaction, image: FileModel.Media.Image) {
+        mediaDbDataSource.deleteImageByPath(transaction, image)
+    }
+
     private fun VideoDao.toFullVideoModel(): FileModel.Media.Video.Full {
         return FileModel.Media.Video.Full(
             path = path,

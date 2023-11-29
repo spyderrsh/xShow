@@ -5,7 +5,9 @@ import com.spyderrsh.xshow.db.dao.VideoDao
 import com.spyderrsh.xshow.db.table.ImageTable
 import com.spyderrsh.xshow.db.table.VideoTable
 import com.spyderrsh.xshow.model.FileModel
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.Transaction
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.experimental.withSuspendTransaction
 import java.io.File
@@ -76,6 +78,18 @@ class MediaDbDataSource {
             VideoDao.find { VideoTable.path like "${folder.absolutePath}%" }.toList().also {
                 Logger.getGlobal().info("Found ${it.size} videos in $path*")
             }
+        }
+    }
+
+    suspend fun deleteVideoByPath(transaction: Transaction, video: FileModel.Media.Video) {
+        transaction.withSuspendTransaction {
+            VideoTable.deleteWhere { VideoTable.path eq video.path }
+        }
+    }
+
+    suspend fun deleteImageByPath(transaction: Transaction, image: FileModel.Media.Image) {
+        transaction.withSuspendTransaction {
+            ImageTable.deleteWhere { ImageTable.path eq image.path }
         }
     }
 

@@ -11,7 +11,5 @@ object SlideshowModel {
     suspend fun getNextMedia() = slideshowService.nextMedia()
 
     suspend fun getPreviousMedia() = slideshowService.previousMedia()
-    suspend fun deleteMedia(media: FileModel.Media) {
-        TODO("Not yet implemented")
-    }
+    suspend fun deleteMedia(media: FileModel.Media) = slideshowService.deleteMedia(media)
 }

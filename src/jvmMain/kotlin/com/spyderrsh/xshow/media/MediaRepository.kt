@@ -26,4 +26,5 @@ interface MediaRepository {
         clipDuration: Duration
     ): Result<Collection<FileModel.Media>>
 
+    suspend fun deleteItem(transaction: Transaction, media: FileModel.Media): Result<Unit>
 }

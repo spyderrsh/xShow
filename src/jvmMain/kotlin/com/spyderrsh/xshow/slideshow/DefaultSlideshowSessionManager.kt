@@ -3,19 +3,23 @@ package com.spyderrsh.xshow.slideshow
 import com.spyderrsh.xshow.ServerConfig
 import com.spyderrsh.xshow.media.MediaRepository
 import com.spyderrsh.xshow.model.FileModel
+import com.spyderrsh.xshow.service.filesystem.FilesystemRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import java.util.logging.Logger
 import kotlin.time.Duration.Companion.seconds
 
 class DefaultSlideshowSessionManager(
     private val mediaRepository: MediaRepository,
     private val config: ServerConfig,
+    private val filesystemRepository: FilesystemRepository
 ) : SlideshowSessionManager {
     private val scope = CoroutineScope(SupervisorJob())
-    private var position: Int = 0
+    private var _position: Int = 0
     private val _slideshowMedia = mutableListOf<FileModel.Media>()
+    private val position get() = Math.floorMod(_position, _slideshowMedia.size)
 
 
     override fun initialize() {
@@ -50,19 +54,73 @@ class DefaultSlideshowSessionManager(
 
     override fun getNextItem(): FileModel.Media {
         // Increment counter
-        ++position
+        ++_position
         // get Item
         return currentItem()
     }
 
     private fun currentItem(): FileModel.Media {
-        return _slideshowMedia[position % _slideshowMedia.count()]
+        return _slideshowMedia[position]
     }
 
     override fun getPreviousItem(): FileModel.Media {
         // Decrement counter
-        --position
+        --_position
         // Get Item
         return currentItem()
+    }
+
+    override suspend fun deleteItem(media: FileModel.Media) {
+        if (media is FileModel.Media.Video.Clip) {
+            return deleteItem(media.parent)
+        }
+        deleteItemAndSubitemsFromSlideshow(media)
+        deleteItemFromHdd(media)
+        deleteItemFromDatabase(media)
+
+    }
+
+    private suspend fun deleteItemFromDatabase(media: FileModel.Media) {
+        newSuspendedTransaction {
+            mediaRepository.deleteItem(this, media)
+        }
+    }
+
+    private fun deleteItemAndSubitemsFromSlideshow(toDelete: FileModel.Media) {
+        when (toDelete) {
+            is FileModel.Media.Video.Full -> deleteVideoFromSlideshow(toDelete)
+            is FileModel.Media.Video.Clip -> deleteVideoFromSlideshow(toDelete.parent)
+            is FileModel.Media.Image -> deleteItemFromSlideshow(toDelete)
+        }
+    }
+
+    private fun deleteItemFromSlideshow(toDelete: FileModel.Media) {
+        synchronized(_slideshowMedia) {
+            val indexToDelete = _slideshowMedia.indexOfFirst {
+                it.serverPath == toDelete.serverPath
+            }.takeIf { it >= 0 } ?: return
+
+            if (indexToDelete <= position) {
+                --_position
+            }
+            _slideshowMedia.removeAt(indexToDelete).also {
+                if (it.serverPath != toDelete.serverPath) {
+                    throw IllegalStateException("Removed item $it did not match $toDelete")
+                }
+            }
+        }
+
+    }
+
+    private fun deleteVideoFromSlideshow(toDelete: FileModel.Media.Video.Full) {
+        _slideshowMedia.filter {
+            it.path == toDelete.path
+        }.forEach {
+            deleteItemFromSlideshow(it)
+        }
+    }
+
+    private suspend fun deleteItemFromHdd(media: FileModel.Media) {
+        filesystemRepository.deleteFile(media)
     }
 }

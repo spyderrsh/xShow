@@ -1,5 +1,6 @@
 package com.spyderrsh.xshow.slideshow
 
+import com.spyderrsh.xshow.model.FileModel
 import io.kvision.redux.TypedReduxStore
 import io.kvision.state.stateFlow
 import kotlinx.coroutines.CoroutineScope
@@ -13,9 +14,36 @@ class SlideshowViewModel(
     val state: StateFlow<SlideshowState> = stateStore.stateFlow
     fun fetchNextItem() {
         scope.launch {
-            SlideshowModel.getNextMedia().let {
-                stateStore.dispatch(SlideshowAction.UpdateItem(it))
-            }
+            fetchNextItemInternal()
+        }
+    }
+
+    private suspend fun fetchNextItemInternal() {
+        SlideshowModel.getNextMedia().let {
+            stateStore.dispatch(SlideshowAction.UpdateItem(it))
+        }
+    }
+
+    fun deleteItem(media: FileModel.Media) {
+        scope.launch {
+            fetchNextItemInternal()
+            SlideshowModel.deleteMedia(media)
+        }
+    }
+
+    fun toggleFullscreen() {
+        stateStore.dispatch(SlideshowAction.ToggleFullscreen)
+    }
+
+    fun fetchPreviousItem() {
+        scope.launch {
+            fetchPreviousItemInternal()
+        }
+    }
+
+    private suspend fun fetchPreviousItemInternal() {
+        SlideshowModel.getPreviousMedia().let {
+            stateStore.dispatch(SlideshowAction.UpdateItem(it))
         }
     }
 }

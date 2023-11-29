@@ -4,10 +4,13 @@ import com.spyderrsh.xshow.model.FileModel
 import io.kvision.redux.RAction
 
 data class SlideshowState(
-    val currentMedia: FileModel.Media? = null
+    val currentMedia: FileModel.Media? = null,
+    val fullscreen: Boolean = false
 
 )
 sealed interface SlideshowAction: RAction {
+    object ToggleFullscreen : SlideshowAction
+
     data class UpdateItem(val value: FileModel.Media): SlideshowAction
 }
 
@@ -17,8 +20,14 @@ fun slideshowReducer(
 ): SlideshowState {
     return when(action) {
         is SlideshowAction.UpdateItem -> handleUpdateItem(state, action)
+        is SlideshowAction.ToggleFullscreen -> handleToggleFullscreen(state, action)
     }
 }
+
+fun handleToggleFullscreen(state: SlideshowState, action: SlideshowAction.ToggleFullscreen): SlideshowState =
+    state.copy(
+        fullscreen = !state.fullscreen
+    )
 
 fun handleUpdateItem(state: SlideshowState, action: SlideshowAction.UpdateItem): SlideshowState = state.copy(
     currentMedia = action.value

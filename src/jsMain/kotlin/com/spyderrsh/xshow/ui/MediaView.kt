@@ -1,12 +1,12 @@
 package com.spyderrsh.xshow.ui
 
 import com.spyderrsh.xshow.model.FileModel
-import io.kvision.core.Container
-import io.kvision.core.onClick
-import io.kvision.core.onEvent
+import io.kvision.core.*
+import io.kvision.html.Div
 import io.kvision.html.TAG
 import io.kvision.html.image
 import io.kvision.html.tag
+import io.kvision.utils.auto
 import kotlin.math.abs
 
 interface MediaViewCallbacks {
@@ -24,6 +24,10 @@ interface MediaViewCallbacks {
 }
 
 fun Container.MediaView(media: FileModel.Media, callbacks: MediaViewCallbacks = MediaViewCallbacks.EMPTY) {
+    (this as? Div)?.apply {
+        addCssStyle(FillContainerStyle)
+        addCssStyle(CenterInPageStyle)
+    }
     when (media) {
         is FileModel.Media.Image -> {
             FileModelImage(media, callbacks)
@@ -40,6 +44,8 @@ fun Container.FileModelImage(image: FileModel.Media.Image, callbacks: MediaViewC
         src = image.serverPath,
         centered = true
     ) {
+        addCssStyle(FillContainerStyle)
+        addCssStyle(CenterInPageStyle)
         onClick { callbacks.onImageClick(image) }
     }
 }
@@ -49,22 +55,40 @@ fun Container.FileModelVideo(video: FileModel.Media.Video, callbacks: MediaViewC
         TAG.VIDEO, attributes =
         mapOf("autoplay" to "", "controls" to "", "src" to video.serverPath)
     ) {
+        addCssStyle(FillContainerStyle)
+        addCssStyle(CenterInPageStyle)
         onEvent {
             ended = { callbacks.onVideoEnd(video) }
             pause = {
-                println("Pause event called")
                 if (video is FileModel.Media.Video.Clip) {
                     val currentTime = this@tag.getElementD().currentTime as? Double
                     currentTime?.let {
-                        println("currentTime = $it")
-                        println("endTime = ${video.endTime}")
                         // Check that it paused close to the endTime
                         if (abs(it.toInt() - video.endTime) < 2) {
                             callbacks.onVideoClipEnd(video)
                         }
                     }
                 }
+
             }
         }
     }
+}
+
+val FillContainerStyle = Style {
+
+    maxHeight = CssSize(100, UNIT.vh)
+    maxWidth = CssSize(100, UNIT.vw)
+    height = CssSize(100, UNIT.perc)
+    width = CssSize(100, UNIT.perc)
+    margin = auto
+//    width = auto
+    display = Display.BLOCK
+    this.setStyle("object-fit", "contain")
+}
+val CenterInPageStyle = Style {
+    position = Position.ABSOLUTE
+    top = CssSize(50, UNIT.perc)
+    left = CssSize(50, UNIT.perc)
+    this.setStyle("transform", "translate(-50%, -50%)")
 }

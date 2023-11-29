@@ -5,7 +5,6 @@ import com.spyderrsh.xshow.slideshow.Slideshow
 import com.spyderrsh.xshow.ui.ShowLoading
 import com.spyderrsh.xshow.ui.UnsupportedState
 import io.kvision.*
-import io.kvision.html.div
 import io.kvision.panel.root
 import io.kvision.state.bind
 import kotlinx.coroutines.CoroutineScope
@@ -40,7 +39,7 @@ class App : Application() {
         val component = AppComponent()
 
         root("kvapp") {
-            div().bind(component.appViewModel.appState) {
+            bind(component.appViewModel.appState) {
                 println(it)
                 when {
                     it.currentScreen == AppScreen.FileSystemBrowser && it.rootFolder == null -> {

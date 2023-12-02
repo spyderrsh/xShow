@@ -84,6 +84,10 @@ class DefaultFilesystemRepository(
             Logger.getGlobal().info("Successfully moved file to ${trashLocation.absolutePath}")
         }
     }
+
+    override fun doesItemExist(item: FileModel): Boolean {
+        return File(item.path).exists()
+    }
 }
 
 fun removeInvalidChars(fileName: String): String {

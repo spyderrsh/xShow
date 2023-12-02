@@ -6,4 +6,5 @@ interface FilesystemRepository {
     fun getRootFolder(): FileModel.Folder
     fun getFolderContents(folder: FileModel.Folder): List<FileModel>
     suspend fun deleteFile(file: FileModel)
+    fun doesItemExist(item: FileModel): Boolean
 }

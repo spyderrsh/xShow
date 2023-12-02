@@ -56,7 +56,26 @@ class DefaultSlideshowSessionManager(
         // Increment counter
         ++_position
         // get Item
+        while (!checkCurrentItem() && _slideshowMedia.size > 0) {
+            // no-op
+            // checkCurrentItem will delete the item in place bringing the
+            // next item into _position
+        }
+
         return currentItem()
+    }
+
+
+    private fun checkCurrentItem(): Boolean {
+        val currentItem = currentItem()
+        if (filesystemRepository.doesItemExist(currentItem()))
+            return true
+        // TODO this probably doesn't work correctly with getPreviousItem()
+        deleteItemAndSubitemsFromSlideshow(currentItem)
+        scope.launch {
+            deleteItemFromDatabase(currentItem)
+        }
+        return false
     }
 
     private fun currentItem(): FileModel.Media {
@@ -66,6 +85,11 @@ class DefaultSlideshowSessionManager(
     override fun getPreviousItem(): FileModel.Media {
         // Decrement counter
         --_position
+        while (!checkCurrentItem() && _slideshowMedia.size > 0) {
+            // If previous item is deleted, the next item will be brought into _position
+            // so we decrement again
+            --_position
+        }
         // Get Item
         return currentItem()
     }

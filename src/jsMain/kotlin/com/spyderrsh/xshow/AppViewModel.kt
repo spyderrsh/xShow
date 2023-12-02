@@ -14,6 +14,12 @@ class AppViewModel(
         }
     }
 
+    fun exitSlideshow() {
+        stateStore.dispatch { dispatch, getState ->
+            dispatch(AppAction.ExitSlideshow)
+        }
+    }
+
     val appState get() = stateStore
     
     init {

@@ -1,12 +1,13 @@
 package com.spyderrsh.xshow.slideshow
 
+import com.spyderrsh.xshow.AppComponent
 import com.spyderrsh.xshow.model.FileModel
+import com.spyderrsh.xshow.ui.ImageButton
 import com.spyderrsh.xshow.ui.MediaView
 import com.spyderrsh.xshow.ui.MediaViewCallbacks
 import com.spyderrsh.xshow.ui.ShowLoading
 import io.kvision.core.*
 import io.kvision.html.div
-import io.kvision.html.image
 import io.kvision.panel.gridPanel
 import io.kvision.state.bind
 import kotlinx.browser.document
@@ -52,7 +53,22 @@ fun Container.ShowItem(media: FileModel.Media) {
 }
 
 fun Container.ShowOverlay(media: FileModel.Media) {
-    gridPanel(columnGap = 8, rowGap = 8, justifyItems = JustifyItems.CENTER) {
+    ShowExitButton()
+    ShowBottomRightButtons(media)
+}
+
+fun Container.ShowExitButton() {
+    div {
+        position = Position.ABSOLUTE
+        this.left = CssSize(16, UNIT.pt)
+        this.top = CssSize(16, UNIT.pt)
+        ExitButton()
+    }
+}
+
+fun Container.ShowBottomRightButtons(media: FileModel.Media) {
+
+    gridPanel(columnGap = 16, rowGap = 16, justifyItems = JustifyItems.CENTER) {
         position = Position.ABSOLUTE
         this.right = CssSize(16, UNIT.pt)
         this.bottom = CssSize(16, UNIT.pt)
@@ -83,46 +99,31 @@ fun Container.ShowOverlay(media: FileModel.Media) {
 }
 
 fun Container.PreviousMediaButton() {
-    image("assets/previous.svg") {
-        width = CssSize(24, UNIT.pt)
-        height = CssSize(24, UNIT.pt)
-        addCssClass("tint-icon")
-        onClick {
+    ImageButton("assets/previous.svg",
+        onClick = {
             getViewModel().fetchPreviousItem()
-        }
-    }
+        })
 }
 
 fun Container.NextMediaButton() {
-    image("assets/next.svg") {
-        width = CssSize(24, UNIT.pt)
-        height = CssSize(24, UNIT.pt)
-        addCssClass("tint-icon")
-        onClick {
+    ImageButton("assets/next.svg",
+        onClick = {
             getViewModel().fetchNextItem()
-        }
-    }
+        })
 }
 
 fun Container.DeleteButton(media: FileModel.Media) {
-    image("assets/delete.svg") {
-        width = CssSize(24, UNIT.pt)
-        height = CssSize(24, UNIT.pt)
-        addCssClass("tint-icon")
-        onClick {
-            getViewModel().deleteItem(media)
-        }
-    }
+    ImageButton("assets/delete.svg", onClick = { getViewModel().deleteItem(media) })
 }
 
 fun Container.FullscreenButton() {
-    image("assets/fullscreen.svg") {
-        width = CssSize(24, UNIT.pt)
-        height = CssSize(24, UNIT.pt)
-        addCssClass("tint-icon")
-        onClick {
-            getViewModel().toggleFullscreen()
-        }
+    ImageButton("assets/fullscreen.svg", onClick = {
+        getViewModel().toggleFullscreen()
+    })
+}
 
-    }
+fun Container.ExitButton() {
+    ImageButton("assets/exit.svg", onClick = {
+        AppComponent().appViewModel.exitSlideshow()
+    })
 }

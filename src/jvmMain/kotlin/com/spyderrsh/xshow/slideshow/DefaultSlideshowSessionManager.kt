@@ -50,6 +50,7 @@ class DefaultSlideshowSessionManager(
 
     private fun resetSession() {
         _slideshowMedia.clear()
+        _position = 0
     }
 
     override fun getNextItem(): FileModel.Media {
@@ -70,7 +71,7 @@ class DefaultSlideshowSessionManager(
         val currentItem = currentItem()
         if (filesystemRepository.doesItemExist(currentItem()))
             return true
-        // TODO this probably doesn't work correctly with getPreviousItem()
+        Logger.getGlobal().warning("Missing item: $currentItem\nClearing slideshow and database")
         deleteItemAndSubitemsFromSlideshow(currentItem)
         scope.launch {
             deleteItemFromDatabase(currentItem)

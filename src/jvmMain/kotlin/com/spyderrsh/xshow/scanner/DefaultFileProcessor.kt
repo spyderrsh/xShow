@@ -17,6 +17,7 @@ class DefaultFileProcessor(
             file.extension.lowercase() in fileModelUtil.VideoExtensions -> videoFlow.send(file)
             file.extension.lowercase() in fileModelUtil.ImageExtensions -> imageFlow.send(file)
             file.isDirectory -> folderFlow.send(file)
+            else -> fileModelUtil.UnusedExtensions.add(file.extension.lowercase())
         }
     }
 }

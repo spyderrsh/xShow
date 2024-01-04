@@ -95,7 +95,7 @@ fun removeInvalidChars(fileName: String): String {
         Paths.get(fileName)
         return fileName
     } catch (e: InvalidPathException) {
-        if (e.input != null && e.input.length > 0 && e.index >= 0) {
+        if (e.input != null && e.input.isNotEmpty() && e.index >= 0) {
             val stringBuilder = StringBuilder(e.input)
             stringBuilder.replace(e.index, e.index + 1, "_")
             return removeInvalidChars(stringBuilder.toString())

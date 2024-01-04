@@ -2,6 +2,7 @@ package com.spyderrsh.xshow.scanner
 
 import com.spyderrsh.xshow.ServerConfig
 import com.spyderrsh.xshow.util.XShowDispatchers
+import com.spyderrsh.xshow.util.XShowFileModelUtil
 import io.ktor.server.application.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -24,7 +25,8 @@ class DefaultDirectoryScanner(
     private val videoProcessor: VideoProcessor,
     private val folderProcessor: DirectoryProcessor,
     private val imageProcessor: ImageProcessor,
-    private val application: Application
+    private val application: Application,
+    private val fileModelUtil: XShowFileModelUtil
 ) : DirectoryScanner {
     private val coroutineScope = CoroutineScope(SupervisorJob() + dispatchers.scanner)
     override fun start() {
@@ -63,6 +65,7 @@ class DefaultDirectoryScanner(
             joinAll(walkerJob, videoJob, imageJob, folderJob)
         }
         Logger.getGlobal().info("All Jobs done!!!")
+        Logger.getGlobal().info("Unused Extensions: ${fileModelUtil.UnusedExtensions}")
         // Save video info to database
         // Load into set for slideshow
         application.environment.monitor.raise(DirectoryScanner.DirectoryScanFinished, Unit)

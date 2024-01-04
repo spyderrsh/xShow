@@ -42,8 +42,9 @@ class DefaultFileModelUtil(private val serverConfig: ServerConfig) : XShowFileMo
         )
     }
 
-    override val ImageExtensions = listOf("jpg", "jpeg", "png")
-    override val VideoExtensions = listOf("mp4", "mov", "avi", "mpg", "mpeg", "webm", "gif", "gifv")
+    override val ImageExtensions = listOf("jpg", "jpeg", "png", "webp")
+    override val VideoExtensions =
+        listOf("mp4", "mov", "avi", "mpg", "mpeg", "webm", "gif", "gifv", "m4v", "mkv", "wmv")
     override val UnusedExtensions = mutableSetOf<String>()
 
 

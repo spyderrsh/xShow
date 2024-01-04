@@ -138,8 +138,10 @@ class DefaultSlideshowSessionManager(
     }
 
     private fun deleteVideoFromSlideshow(toDelete: FileModel.Media.Video.Full) {
-        _slideshowMedia.filter {
-            it.path == toDelete.path
+        synchronized(_slideshowMedia) {
+            _slideshowMedia.filter {
+                it.path == toDelete.path
+            }
         }.forEach {
             deleteItemFromSlideshow(it)
         }

@@ -9,7 +9,6 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.Transaction
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import java.io.File
-import java.util.logging.Logger
 import kotlin.time.Duration
 
 class DefaultMediaRepository(
@@ -57,27 +56,22 @@ class DefaultMediaRepository(
             val collection = mutableListOf<FileModel.Media>()
             newSuspendedTransaction {
                 if (images) {
-                    collection.addAll(
-                        mediaDbDataSource.getAllImagesInDir(this, rootPath)
-                            .mapTo(collection) { it.toImageModel() })
+
+                    mediaDbDataSource.getAllImagesInDir(this, rootPath)
+                        .mapTo(collection) { it.toImageModel() }
                 }
                 if (videos) {
                     if (!clips) {
-                        collection.addAll(
-                            mediaDbDataSource.getAllVideosInDir(this, rootPath)
-                                .mapTo(collection) {
-                                    it.toFullVideoModel()
-                                }
-                        )
+                        mediaDbDataSource.getAllVideosInDir(this, rootPath)
+                            .mapTo(collection) {
+                                it.toFullVideoModel()
+                            }
+
                     } else {
-                        collection.addAll(
-                            mediaDbDataSource.getAllVideosInDir(this, rootPath)
-                                .flatMapTo(collection) {
-                                    it.toFullVideoModel().transformToVideoPlusClips(clipDuration)
-                                }.also {
-                                    Logger.getGlobal().info("Adding ${it.size} videos + clips")
-                                }
-                        )
+                        mediaDbDataSource.getAllVideosInDir(this, rootPath)
+                            .flatMapTo(collection) {
+                                it.toFullVideoModel().transformToVideoPlusClips(clipDuration)
+                            }
                     }
                 }
             }

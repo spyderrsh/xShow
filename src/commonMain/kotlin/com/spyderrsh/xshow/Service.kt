@@ -1,8 +1,8 @@
 package com.spyderrsh.xshow
 
-import io.kvision.annotations.KVService
+//import io.kvision.annotations.KVService
 
-@KVService
+//@KVService
 interface IPingService {
     suspend fun ping(message: String): String
 }

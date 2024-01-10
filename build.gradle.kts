@@ -1,13 +1,10 @@
 import org.jetbrains.compose.ComposeExtension
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     val kotlinVersion: String by System.getProperties()
     kotlin("plugin.serialization") version kotlinVersion
     kotlin("multiplatform") version kotlinVersion
-    val kvisionVersion: String by System.getProperties()
-//    id("io.kvision") version kvisionVersion
     id("org.jetbrains.compose")
 }
 
@@ -27,7 +24,7 @@ val ktorVersion: String by project
 val logbackVersion: String by project
 val exposedVersion: String by project
 
-val mainClassName = "io.ktor.server.netty.EngineMain"
+
 afterEvaluate {
     extensions.findByType(ComposeExtension::class.java)?.apply {
         val kotlinGeneration = project.property("kotlin.generation")
@@ -39,18 +36,6 @@ afterEvaluate {
 }
 kotlin {
     jvmToolchain(17)
-    jvm {
-        withJava()
-        compilations.all {
-            kotlinOptions {
-                freeCompilerArgs = listOf("-Xjsr305=strict")
-            }
-        }
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        mainRun {
-            mainClass.set(mainClassName)
-        }
-    }
 //    js(IR) {
 //        browser {
 //            commonWebpackConfig(Action {
@@ -114,17 +99,6 @@ kotlin {
         binaries.executable()
     }
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
-            }
-        }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-            }
-        }
         val jsWasmMain by creating {
             dependencies {
                 implementation(compose.runtime)
@@ -135,35 +109,6 @@ kotlin {
                 implementation(compose.components.resources)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.material3)
-            }
-        }
-        val jvmMain by getting {
-            dependencies {
-                implementation(kotlin("reflect"))
-                implementation("io.ktor:ktor-server-netty:$ktorVersion")
-                implementation("io.ktor:ktor-server-auth:$ktorVersion")
-                implementation("io.ktor:ktor-server-compression:$ktorVersion")
-                implementation("io.ktor:ktor-server-partial-content:$ktorVersion")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-                implementation("ch.qos.logback:logback-classic:$logbackVersion")
-                implementation("net.bramp.ffmpeg:ffmpeg:0.8.0")
-
-                implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
-                implementation("org.jetbrains.exposed:exposed-crypt:$exposedVersion")
-                implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
-                implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-                implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
-                implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
-                implementation("org.xerial:sqlite-jdbc:3.30.1")
-
-                api( "io.insert-koin:koin-logger-slf4j:$koinVersion")
-
-            }
-        }
-        val jvmTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
             }
         }
 //        val jsMain by getting {

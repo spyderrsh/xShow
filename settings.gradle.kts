@@ -22,4 +22,9 @@ pluginManagement {
         id("org.jetbrains.compose").version(composeVersion)
     }
 }
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
+}
 rootProject.name = "xshow"
+include("server")
+include("shared")

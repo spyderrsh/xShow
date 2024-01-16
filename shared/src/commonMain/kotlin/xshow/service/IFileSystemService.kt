@@ -2,9 +2,6 @@ package com.spyderrsh.xshow.service
 
 import com.spyderrsh.xshow.model.FileModel
 
-//import io.kvision.annotations.KVService
-
-//@KVService
 interface IFileSystemService {
 
     suspend fun getRootFolder(): FileModel.Folder

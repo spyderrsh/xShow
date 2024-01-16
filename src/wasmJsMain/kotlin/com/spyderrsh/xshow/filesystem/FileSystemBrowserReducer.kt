@@ -1,7 +1,6 @@
 package com.spyderrsh.xshow.filesystem
 
 import com.spyderrsh.xshow.model.FileModel
-import io.kvision.redux.RAction
 
 data class FileSystemBrowserState(
     val currentFolder: FileModel.Folder? = null,
@@ -38,12 +37,12 @@ data class FileSystemBrowserState(
     val isLoading = loadingFolder != null
 }
 
-sealed interface FileSystemBrowserAction : RAction {
+sealed interface FileSystemBrowserAction {
     data class LoadingFolderStarted(val folderToLoad: FileModel.Folder) : FileSystemBrowserAction
     data class FolderLoaded(val files: List<FileModel>) : FileSystemBrowserAction
     data class FailedToLoad(val error: Throwable) : FileSystemBrowserAction
 
-    data class ShowOverlay(val file: FileModel.Media): FileSystemBrowserAction
+    data class ShowOverlay(val file: FileModel.Media) : FileSystemBrowserAction
     object HideOverlay : FileSystemBrowserAction
 }
 

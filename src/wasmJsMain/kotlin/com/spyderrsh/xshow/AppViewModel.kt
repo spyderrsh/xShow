@@ -1,8 +1,9 @@
 package com.spyderrsh.xshow
 
+import com.spyderrsh.xshow.AppComponent.appScope
 import com.spyderrsh.xshow.model.FileModel
+import com.spyderrsh.xshow.redux.TypedReduxStore
 import com.spyderrsh.xshow.slideshow.SlideshowOptions
-import io.kvision.redux.TypedReduxStore
 import kotlinx.coroutines.launch
 
 class AppViewModel(
@@ -20,12 +21,12 @@ class AppViewModel(
         }
     }
 
-    val appState get() = stateStore
+    val appStateFlow get() = stateStore.stateFlow
     
     init {
 
         stateStore.dispatch { dispatch, getState ->
-            AppScope.launch {
+            appScope.launch {
                 runCatching {Model.getRootFolder() }
                     .onSuccess {
                         dispatch(AppAction.ReceivedRootFolder(it))

@@ -16,11 +16,13 @@ import com.spyderrsh.xshow.slideshow.SlideshowModule
 import com.spyderrsh.xshow.slideshow.SlideshowSessionManager
 import com.spyderrsh.xshow.util.DefaultServerConfig
 import com.spyderrsh.xshow.util.UtilModule
+import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
 import io.ktor.server.plugins.compression.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.partialcontent.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
@@ -54,6 +56,19 @@ fun Application.main() {
                 isLenient = true
             }
         )
+    }
+    install(CORS) {
+        allowMethod(HttpMethod.Options)
+        allowMethod(HttpMethod.Put)
+        allowMethod(HttpMethod.Delete)
+        allowMethod(HttpMethod.Patch)
+        allowHeader(HttpHeaders.Authorization)
+        allowHeader(HttpHeaders.ContentType)
+        allowHeader(HttpHeaders.AccessControlAllowOrigin)
+        // header("any header") if you want to add any header
+        allowCredentials = true
+        allowNonSimpleContentTypes = true
+        anyHost()
     }
 
     environment.monitor.subscribe(KoinApplicationStarted) {

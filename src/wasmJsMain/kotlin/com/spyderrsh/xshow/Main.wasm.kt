@@ -6,13 +6,17 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.CanvasBasedWindow
+import com.spyderrsh.xshow.AppComponent.appViewModel
 import com.spyderrsh.xshow.style.XshowTheme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.configureWebResources
 import org.jetbrains.compose.resources.urlResource
+
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalResourceApi::class)
 fun main() {
@@ -20,25 +24,30 @@ fun main() {
         // same as default - this is not necessary to add here. It's here to show this feature
         setResourceFactory { urlResource("./$it") }
     }
-    CanvasBasedWindow("ImageViewer") {
-        MainWindow()
+    // koin needs wasm support
+//    startKoin {
+//
+//    }
+    CanvasBasedWindow("XShow") {
+        MainWindow(appViewModel)
     }
 }
 
 @Composable
-fun MainWindow() {
+fun MainWindow(appViewModel: AppViewModel) {
+    val appState by appViewModel.appStateFlow.collectAsState(AppState())
     XshowTheme {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
-            XShow()
+            XShow(appState)
         }
     }
 }
 
 @Composable
-fun XShow() {
+fun XShow(appState: AppState) {
     Box(Modifier.wrapContentSize()) {
-        Text("Loading")
+        Text(appState.toString())
     }
 }

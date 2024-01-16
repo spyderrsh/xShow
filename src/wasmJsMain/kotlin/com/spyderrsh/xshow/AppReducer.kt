@@ -2,7 +2,6 @@ package com.spyderrsh.xshow
 
 import com.spyderrsh.xshow.model.FileModel
 import com.spyderrsh.xshow.slideshow.SlideshowOptions
-import io.kvision.redux.RAction
 
 
 data class AppState(
@@ -19,7 +18,7 @@ enum class AppScreen {
 }
 
 
-sealed interface AppAction : RAction {
+sealed interface AppAction {
     object ExitSlideshow : AppAction
 
     data class ReceivedRootFolder(val startFolder: FileModel.Folder) : AppAction

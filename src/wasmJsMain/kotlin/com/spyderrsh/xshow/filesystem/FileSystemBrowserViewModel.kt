@@ -2,14 +2,9 @@ package com.spyderrsh.xshow.filesystem
 
 import com.spyderrsh.xshow.Model
 import com.spyderrsh.xshow.model.FileModel
-import io.kvision.redux.TypedReduxStore
-import io.kvision.state.ObservableState
-import io.kvision.state.stateFlow
+import com.spyderrsh.xshow.redux.TypedReduxStore
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class FileSystemBrowserViewModel(
@@ -35,7 +30,7 @@ class FileSystemBrowserViewModel(
 
 
     init {
-        stateStore.subscribe { state ->
+        stateStore.stateFlow.onEach { state ->
             state.loadingFolder?.let {
                 stateStore.dispatch { dispatch, getState ->
                     scope.launch {
@@ -45,6 +40,6 @@ class FileSystemBrowserViewModel(
                     }
                 }
             }
-        }
+        }.launchIn(scope)
     }
 }

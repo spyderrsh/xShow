@@ -9,9 +9,9 @@ interface ISlideshowService {
     suspend fun deleteMedia(media: FileModel.Media)
 
     companion object {
-        val NEXT_MEDIA_ENDPOINT = "/nextMedia"
-        val PREVIOUS_MEDIA_ENDPOINT = "/previousMedia"
-        val DELETE_MEDIA_ENDPOINT = "/deleteMedia"
+        const val NEXT_MEDIA_ENDPOINT = "/nextMedia"
+        const val PREVIOUS_MEDIA_ENDPOINT = "/previousMedia"
+        const val DELETE_MEDIA_ENDPOINT = "/deleteMedia"
     }
 
 }

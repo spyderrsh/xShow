@@ -14,11 +14,11 @@ group = "com.spyderrsh"
 repositories {
     mavenCentral()
     mavenLocal()
+    maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
 }
 
 // Versions
 val kotlinVersion: String by System.getProperties()
-//val kvisionVersion: String by System.getProperties()
 val koinVersion: String by System.getProperties()
 val ktorVersion: String by project
 val logbackVersion: String by project
@@ -36,36 +36,7 @@ afterEvaluate {
 }
 kotlin {
     jvmToolchain(17)
-//    js(IR) {
-//        browser {
-//            commonWebpackConfig(Action {
-//                outputFileName = "main.bundle.js"
-//            })
-//            runTask(Action {
-//                sourceMaps = false
-//                devServer = KotlinWebpackConfig.DevServer(
-//                    open = false,
-//                    port = 3000,
-//                    proxy = mutableMapOf(
-//                        "/kv/*" to "http://localhost:8080",
-//                        "/xstatic/*" to mapOf(
-//                            "target" to "http://localhost:8080",
-//                            "router" to "http://localhost:3000",
-//                        ),
-//                        "/kvsse/*" to "http://localhost:8080",
-//                        "/kvws/*" to mapOf("target" to "ws://localhost:8080", "ws" to true)
-//                    ),
-//                    static = mutableListOf("${layout.buildDirectory.asFile.get()}/processedResources/js/main")
-//                )
-//            })
-//            testTask(Action {
-//                useKarma {
-//                    useChromeHeadless()
-//                }
-//            })
-//        }
-//        binaries.executable()
-//    }
+
     wasmJs {
         moduleName = "xshow"
         browser {
@@ -99,8 +70,15 @@ kotlin {
         binaries.executable()
     }
     sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(project(":shared"))
+            }
+        }
         val jsWasmMain by creating {
             dependencies {
+                implementation(libs.kotlinx.coroutines)
+                implementation(libs.kotlinx.serialization)
                 implementation(compose.runtime)
                 implementation(compose.ui)
                 implementation(compose.foundation)
@@ -109,30 +87,16 @@ kotlin {
                 implementation(compose.components.resources)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.material3)
+                implementation("io.ktor:ktor-client-core:3.0.0-wasm1")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.0-wasm1")
+                implementation("io.ktor:ktor-client-content-negotiation:3.0.0-wasm1")
+
             }
         }
-//        val jsMain by getting {
-//            dependencies {
-//                implementation("io.kvision:kvision:$kvisionVersion")
-//                implementation("io.kvision:kvision-bootstrap:$kvisionVersion")
-//                implementation("io.kvision:kvision-toastify:$kvisionVersion")
-//                implementation("io.kvision:kvision-jquery:$kvisionVersion")
-//                implementation("io.kvision:kvision-state:$kvisionVersion")
-//                implementation("io.kvision:kvision-state-flow:$kvisionVersion")
-//                implementation("io.kvision:kvision-redux-kotlin:$kvisionVersion")
-//                implementation("io.insert-koin:koin-core:$koinVersion")
-//            }
-//        }
 
         val wasmJsMain by getting {
             dependsOn(jsWasmMain)
         }
-//        val jsTest by getting {
-//            dependencies {
-//                implementation(kotlin("test-js"))
-//                implementation("io.kvision:kvision-testutils:$kvisionVersion")
-//            }
-//        }
     }
 }
 

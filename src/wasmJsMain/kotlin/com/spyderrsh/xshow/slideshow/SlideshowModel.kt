@@ -1,12 +1,11 @@
 package com.spyderrsh.xshow.slideshow
 
+import com.spyderrsh.xshow.AppComponent
 import com.spyderrsh.xshow.model.FileModel
-import com.spyderrsh.xshow.service.ISlideshowService
-import io.kvision.remote.getService
 
 object SlideshowModel {
 
-    private val slideshowService = getService<ISlideshowService>()
+    private val slideshowService = AppComponent.slideshowService
 
     suspend fun getNextMedia() = slideshowService.nextMedia()
 

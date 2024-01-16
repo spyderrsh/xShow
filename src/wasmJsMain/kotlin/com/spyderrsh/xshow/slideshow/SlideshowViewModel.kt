@@ -1,8 +1,7 @@
 package com.spyderrsh.xshow.slideshow
 
 import com.spyderrsh.xshow.model.FileModel
-import io.kvision.redux.TypedReduxStore
-import io.kvision.state.stateFlow
+import com.spyderrsh.xshow.redux.TypedReduxStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

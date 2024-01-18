@@ -1,10 +1,7 @@
 package com.spyderrsh.xshow
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -12,6 +9,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.CanvasBasedWindow
 import com.spyderrsh.xshow.AppComponent.appViewModel
+import com.spyderrsh.xshow.filesystem.FileSystemBrowser
 import com.spyderrsh.xshow.style.XshowTheme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.configureWebResources
@@ -47,7 +45,8 @@ fun MainWindow(appViewModel: AppViewModel) {
 
 @Composable
 fun XShow(appState: AppState) {
-    Box(Modifier.wrapContentSize()) {
-        Text(appState.toString())
+    when (appState.currentScreen) {
+        AppScreen.FileSystemBrowser -> FileSystemBrowser(appState)
+        AppScreen.SlideShow -> TODO(" Slideshow()")
     }
 }

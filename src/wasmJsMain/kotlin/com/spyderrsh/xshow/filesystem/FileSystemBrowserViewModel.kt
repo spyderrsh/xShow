@@ -28,6 +28,14 @@ class FileSystemBrowserViewModel(
         stateStore.dispatch(FileSystemBrowserAction.HideOverlay)
     }
 
+    fun onFileClick(model: FileModel) {
+        println("Received click on $model")
+        when (model) {
+            is FileModel.Folder -> loadFolder(model)
+            else -> println("Unhandled FileModel Click: ${model.shortName}")
+        }
+    }
+
 
     init {
         stateStore.stateFlow.onEach { state ->

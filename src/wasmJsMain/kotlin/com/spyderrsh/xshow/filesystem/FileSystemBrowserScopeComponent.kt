@@ -5,7 +5,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 
-class FileSystemBrowserScopeComponent {
+//TODO scope this
+object FileSystemBrowserScopeComponent {
     val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     val fileSystemBrowserViewModel: FileSystemBrowserViewModel =
         FileSystemBrowserViewModel(createTypedReduxStore(::fileSystemBrowserReducer, FileSystemBrowserState()), scope)

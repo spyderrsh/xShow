@@ -1,6 +1,7 @@
 package com.spyderrsh.xshow.slideshow
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -71,6 +72,7 @@ fun Slideshow(
 ) {
     val isFullscreen = state.fullscreen
     val currentMedia = state.currentMedia
+    val interactionSource = remember { MutableInteractionSource() }
     LaunchedEffect(isFullscreen) {
         if (isFullscreen && !isFullscreen()) {
             enterFullscreen()
@@ -80,7 +82,7 @@ fun Slideshow(
     }
     Box(Modifier.fillMaxSize()) {
         when (currentMedia) {
-            is FileModel.Media.Image -> SlideshowShowImage(currentMedia)
+            is FileModel.Media.Image -> SlideshowShowImage(currentMedia, onNextClick)
             is FileModel.Media.Video -> SlideshowShowVideo(currentMedia)
             null -> ShowLoading()
         }
@@ -115,13 +117,10 @@ fun SlideshowControls(
     Column(modifier = modifier) {
         Row {
             SlideshowButton("delete", onDeleteClick)
-            Spacer(Modifier.width(8.dp))
             SlideshowButton("fullscreen", onFullscreenClick)
         }
-        Spacer(Modifier.height(8.dp))
         Row {
             SlideshowButton("previous", onPreviousClick)
-            Spacer(Modifier.width(8.dp))
             SlideshowButton("next", onNextClick)
         }
     }
@@ -131,11 +130,17 @@ fun SlideshowControls(
 fun SlideshowButton(assetName: String, onClick: () -> Unit) {
     val painter = painterResourceCached("assets/ic_${assetName}_128.png")
     val interactionSource = remember { MutableInteractionSource() }
-    Image(
-        painter,
-        contentDescription = assetName,
-        modifier = Modifier.size(32.dp).clickable(interactionSource, indication = null, onClick = onClick)
-    )
+    Box(
+        Modifier.size(40.dp)
+            .clickable(interactionSource, indication = LocalIndication.current, onClick = onClick),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter,
+            contentDescription = assetName,
+            modifier = Modifier.size(32.dp)
+        )
+    }
 }
 
 @Composable
@@ -145,11 +150,12 @@ fun SlideshowShowVideo(video: FileModel.Media.Video) {
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun SlideshowShowImage(image: FileModel.Media.Image) {
+fun SlideshowShowImage(image: FileModel.Media.Image, onNextClick: () -> Unit) {
     val urlResource = remember(image.serverPath) { urlResource(image.serverPath) }
     val rib = urlResource.rememberImageBitmap()
     var isError by remember { mutableStateOf(false) }
     var painter by remember { mutableStateOf(BitmapPainter(emptyImageBitmap)) }
+    val interactionSource = remember { MutableInteractionSource() }
     LaunchedEffect(image.serverPath, rib) {
         when (rib) {
             is LoadState.Success -> {
@@ -169,6 +175,14 @@ fun SlideshowShowImage(image: FileModel.Media.Image) {
     if (isError) {
         Text("Issue loading image: $image")
     } else {
-        Image(painter, image.shortName, modifier = Modifier.fillMaxSize())
+        Image(
+            painter,
+            image.shortName,
+            modifier = Modifier.fillMaxSize().clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onNextClick
+            )
+        )
     }
 }

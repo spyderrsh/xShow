@@ -5,6 +5,7 @@ import com.spyderrsh.xshow.service.ISlideshowService
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.http.*
 
 class SlideshowService(private val client: HttpClient, private val baseUrl: String) : ISlideshowService {
     override suspend fun nextMedia(): FileModel.Media {
@@ -21,6 +22,9 @@ class SlideshowService(private val client: HttpClient, private val baseUrl: Stri
 
     override suspend fun deleteMedia(media: FileModel.Media) {
         return client.post("$baseUrl${ISlideshowService.DELETE_MEDIA_ENDPOINT}") {
+            headers {
+                contentType(ContentType.Application.Json)
+            }
             setBody(media)
         }.body()
     }

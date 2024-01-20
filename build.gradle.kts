@@ -41,21 +41,21 @@ kotlin {
         moduleName = "xshow"
         browser {
             commonWebpackConfig {
-                devServer = (devServer ?: KotlinWebpackConfig.DevServer(
-                    port = 3001,
-                    proxy = mutableMapOf(
-                        "/xstatic/*" to mapOf(
-                            "target" to "http://localhost:8080",
-                            "router" to "http://localhost:3001",
-                        ),
-                    ),
-                )).apply {
+                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
                     // Uncomment and configure this if you want to open a browser different from the system default
                     // open = mapOf(
                     //     "app" to mapOf(
                     //         "name" to "google chrome"
                     //     )
                     // )
+                    proxy = (proxy ?: mutableMapOf()).apply {
+                        put(
+                            "/xstatic/*", mapOf(
+                                "target" to "http://localhost:8080",
+                                "router" to "http://localhost:8081",
+                            )
+                        )
+                    }
 
                     static = (static ?: mutableListOf()).apply {
                         // Serve sources to debug inside browser

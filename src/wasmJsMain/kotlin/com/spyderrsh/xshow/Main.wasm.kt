@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.CanvasBasedWindow
 import com.spyderrsh.xshow.AppComponent.appViewModel
 import com.spyderrsh.xshow.filesystem.FileSystemBrowser
+import com.spyderrsh.xshow.slideshow.Slideshow
 import com.spyderrsh.xshow.style.XshowTheme
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.configureWebResources
@@ -38,15 +39,15 @@ fun MainWindow(appViewModel: AppViewModel) {
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
-            XShow(appState)
+            XShow(appState, { appViewModel.startSlideshow(appState.rootFolder!!) }, { appViewModel.exitSlideshow() })
         }
     }
 }
 
 @Composable
-fun XShow(appState: AppState) {
+fun XShow(appState: AppState, onPlayClick: () -> Unit, onCloseSlideshowClick: () -> Unit) {
     when (appState.currentScreen) {
-        AppScreen.FileSystemBrowser -> FileSystemBrowser(appState)
-        AppScreen.SlideShow -> TODO(" Slideshow()")
+        AppScreen.FileSystemBrowser -> FileSystemBrowser(appState, onPlayClick)
+        AppScreen.SlideShow -> Slideshow(appState, onCloseSlideshowClick)
     }
 }

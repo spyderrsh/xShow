@@ -19,17 +19,21 @@ import com.spyderrsh.xshow.util.painterResourceCached
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 @Composable
-fun FileSystemBrowser(appState: AppState) {
+fun FileSystemBrowser(appState: AppState, onPlayClick: () -> Unit) {
     val viewModel = remember { FileSystemBrowserScopeComponent.fileSystemBrowserViewModel }
     LaunchedEffect(appState.rootFolder) {
         appState.rootFolder?.let { viewModel.loadFolder(it) }
     }
     val fileSystemBrowserState by viewModel.state.collectAsState()
-    FileSystemBrowser(fileSystemBrowserState, onClick = { viewModel.onFileClick(it) })
+    FileSystemBrowser(
+        fileSystemBrowserState,
+        onFileClick = { viewModel.onFileClick(it) },
+        onPlayClick = onPlayClick
+    )
 }
 
 @Composable
-fun FileSystemBrowser(state: FileSystemBrowserState, onClick: (FileModel) -> Unit) {
+fun FileSystemBrowser(state: FileSystemBrowserState, onFileClick: (FileModel) -> Unit, onPlayClick: () -> Unit) {
     // Initial Loading State
     if (state.isLoading && state.currentFiles.isEmpty() || state.currentFolder == null) {
         Box(Modifier.wrapContentSize()) {
@@ -38,22 +42,38 @@ fun FileSystemBrowser(state: FileSystemBrowserState, onClick: (FileModel) -> Uni
         return
     }
     val parentFolder = remember(state.currentFolder) { state.currentFolder.parentFolder }
-    LazyColumn(
-        Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(vertical = 8.dp)
-    ) {
-        if (state.isLoading) {
-            item { ShowLoading() }
+    Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        LazyColumn(
+            Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(vertical = 8.dp)
+        ) {
+            if (state.isLoading) {
+                item { ShowLoading() }
+            }
+            item { FolderTitle(state.currentFolder) }
+            if (parentFolder != null) {
+                item { ShowParentFolder(parentFolder) { onFileClick(parentFolder) } }
+            }
+            items(state.currentFiles) {
+                ShowFile(it, onClick = { onFileClick(it) })
+            }
         }
-        item { FolderTitle(state.currentFolder) }
-        if (parentFolder != null) {
-            item { ShowParentFolder(parentFolder) { onClick(parentFolder) } }
-        }
-        items(state.currentFiles) {
-            ShowFile(it, onClick = { onClick(it) })
-        }
+        PlayButton(modifier = Modifier.align(Alignment.BottomEnd), onPlayClick)
     }
 
+}
+
+@Composable
+fun PlayButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
+    val playButtonIcon = painterResourceCached("assets/ic_play_128.png")
+    val interactionSource = remember { MutableInteractionSource() }
+    Image(
+        painter = playButtonIcon,
+        contentDescription = "Play Button",
+        modifier = Modifier.size(64.dp)
+            .then(modifier)
+            .clickable(interactionSource, indication = null, onClick = onClick)
+    )
 }
 
 @Composable

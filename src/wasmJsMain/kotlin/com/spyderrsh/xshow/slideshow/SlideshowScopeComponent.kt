@@ -5,7 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 
-class SlideShowScopeComponent {
+object SlideShowScopeComponent {
     val scope: CoroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     val slideShowViewModel: SlideshowViewModel =
         SlideshowViewModel(createTypedReduxStore(::slideshowReducer, SlideshowState()), scope)

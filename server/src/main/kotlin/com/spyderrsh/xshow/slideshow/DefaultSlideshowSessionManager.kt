@@ -66,13 +66,14 @@ class DefaultSlideshowSessionManager(
         return currentItem()
     }
 
-
     private fun checkCurrentItem(): Boolean {
         val currentItem = currentItem()
         if (filesystemRepository.doesItemExist(currentItem()))
             return true
         Logger.getGlobal().warning("Missing item: $currentItem\nClearing slideshow and database")
         deleteItemAndSubitemsFromSlideshow(currentItem)
+        // Increment after deleting item
+        _position++
         scope.launch {
             deleteItemFromDatabase(currentItem)
         }

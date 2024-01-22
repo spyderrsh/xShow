@@ -7,14 +7,6 @@
     <script type="application/javascript" src="skiko.js"></script>
     <script type="application/javascript" src="xshow.js"></script>
     <style>
-        html, body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            background-color: white;
-            overflow: hidden;
-        }
 
         #warning {
             position: absolute;
@@ -55,9 +47,12 @@
             cursor: pointer;
         }
     </style>
+    <link rel="stylesheet" href="dark-theme.css">
 </head>
 <body>
-<canvas id="ComposeTarget"></canvas>
+<div id="content">
+    <canvas id="ComposeTarget"></canvas>
+</div>
 
 <div id="warning">
     ⚠️ Please make sure that your runtime environment supports the latest version of Wasm GC and Exception-Handling
@@ -78,27 +73,6 @@
             </ol>
         </li>
     </ul>
-</div>
-<div id="footer">
-    <div style="float: left; width: 50%; padding-right: 5px">
-        <span style="padding-left: 20px">Don't hesitate to share your feedback and ask questions:</span>
-        <ul style="">
-            <li>In the Kotlin Slack <code><a
-                    href="https://slack-chats.kotlinlang.org/c/webassembly">#webassembly</a></code> channel (if you’re
-                not a member, apply at <a href="https://kotl.in/slack">https://kotl.in/slack</a>).
-            </li>
-        </ul>
-    </div>
-    <div style="float: left; width: 45%;">
-        <span style="padding-left: 20px;">For future news</span>
-        <ul>
-            <li>Join <code><a href="https://slack-chats.kotlinlang.org/c/webassembly">#webassembly</a></code> channel in
-                Kotlin Slack (if you’re not a member, apply at <a href="https://kotl.in/slack">https://kotl.in/slack</a>).
-            </li>
-            <li>Follow <a href="https://twitter.com/bashorov/">@bashorov</a> on Twitter</li>
-        </ul>
-    </div>
-    <div id="close" onclick="document.getElementById('footer').style.display='none'">ⓧ</div>
 </div>
 </body>
 

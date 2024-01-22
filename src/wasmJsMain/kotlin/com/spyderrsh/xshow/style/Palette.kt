@@ -22,7 +22,6 @@ object XShowColors {
     val TranslucentWhite = Color(255, 255, 255, 20)
     val Transparent = Color.Transparent
 
-    val background = Color(0xFFFFFFFF)
     val onBackground = Color(0xFF19191C)
 
     val fullScreenImageBackground = Color(0xFF19191C)
@@ -50,9 +49,10 @@ object XShowColors {
 @Composable
 fun XshowTheme(content: @Composable () -> Unit) {
     isSystemInDarkTheme() // todo check and change colors
+
     MaterialTheme(
         colorScheme = MaterialTheme.colorScheme.copy(
-            background = XShowColors.background,
+            background = Color.Black,
             onBackground = XShowColors.onBackground
         )
     ) {

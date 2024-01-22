@@ -2,6 +2,7 @@ package com.spyderrsh.xshow.slideshow
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -9,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.unit.dp
@@ -45,6 +47,25 @@ fun exitFullscreen(): Unit =
 fun isFullscreen(): Boolean =
     js("""document.fullscreen""")
 
+fun playVideo(serverPath: String, videoContainerTag: String = "content"): Unit = js(
+    """{
+           const videoDiv = document.getElementById(videoContainerTag);
+           const oldVideo = document.getElementById("play-video");
+           if(oldVideo) {
+               oldVideo.remove();
+           }
+           const node = document.createElement("video");
+           videoDiv.setAttribute("class", "fill-container center-in-page");
+           node.setAttribute("class", "fill-container center-in-page");
+           node.setAttribute("autoplay","");
+           node.setAttribute("controls","");
+           node.setAttribute("src",serverPath);
+           node.setAttribute("id","play-video");
+           videoDiv.insertBefore(node, videoDiv.children[0]);
+        }
+    """
+)
+
 private val emptyImageBitmap: ImageBitmap by lazy { ImageBitmap(1, 1) }
 
 @Composable
@@ -80,7 +101,7 @@ fun Slideshow(
             exitFullscreen()
         }
     }
-    Box(Modifier.fillMaxSize()) {
+    Box(Modifier.fillMaxSize().background(Color(0x2200ff00))) {
         when (currentMedia) {
             is FileModel.Media.Image -> SlideshowShowImage(currentMedia, onNextClick)
             is FileModel.Media.Video -> SlideshowShowVideo(currentMedia)
@@ -145,7 +166,8 @@ fun SlideshowButton(assetName: String, onClick: () -> Unit) {
 
 @Composable
 fun SlideshowShowVideo(video: FileModel.Media.Video) {
-    Text("Video currently not supported $video")
+//    Text("Video currently not supported $video")
+    playVideo(video.serverPath)
 }
 
 @OptIn(ExperimentalResourceApi::class)

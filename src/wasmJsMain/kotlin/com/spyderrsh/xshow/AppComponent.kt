@@ -28,5 +28,5 @@ object AppComponent {
     const val serverBaseUrl = "http://192.168.1.84:8080"
     val filesystemService = FileSystemService(httpClient, serverBaseUrl)
     val slideshowService = SlideshowService(httpClient, serverBaseUrl)
-    val appViewModel = AppViewModel(createTypedReduxStore(::appReducer, AppState()))
+    val appViewModel = AppViewModel(createTypedReduxStore(::appReducer, AppState()), appScope)
 }

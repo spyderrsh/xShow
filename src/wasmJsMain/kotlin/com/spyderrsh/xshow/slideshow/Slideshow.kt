@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalResourceApi::class)
+
 package com.spyderrsh.xshow.slideshow
 
 import androidx.compose.foundation.Image
@@ -6,19 +8,21 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.spyderrsh.xshow.AppState
+import com.spyderrsh.xshow.component.XShowVideo
 import com.spyderrsh.xshow.filesystem.ShowLoading
+import com.spyderrsh.xshow.generated.resources.*
 import com.spyderrsh.xshow.model.FileModel
 import com.spyderrsh.xshow.util.painterResourceCached
-import org.jetbrains.compose.resources.*
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 fun enterFullscreen(): Unit =
     js(
@@ -47,24 +51,24 @@ fun exitFullscreen(): Unit =
 fun isFullscreen(): Boolean =
     js("""document.fullscreen""")
 
-fun playVideo(serverPath: String, videoContainerTag: String = "content"): Unit = js(
-    """{
-           const videoDiv = document.getElementById(videoContainerTag);
-           const oldVideo = document.getElementById("play-video");
-           if(oldVideo) {
-               oldVideo.remove();
-           }
-           const node = document.createElement("video");
-           videoDiv.setAttribute("class", "fill-container center-in-page");
-           node.setAttribute("class", "fill-container center-in-page");
-           node.setAttribute("autoplay","");
-           node.setAttribute("controls","");
-           node.setAttribute("src",serverPath);
-           node.setAttribute("id","play-video");
-           videoDiv.insertBefore(node, videoDiv.children[0]);
-        }
-    """
-)
+//fun playVideo(serverPath: String, videoContainerTag: String = "content"): Unit = js(
+//    """{
+//           const videoDiv = document.getElementById(videoContainerTag);
+//           const oldVideo = document.getElementById("play-video");
+//           if(oldVideo) {
+//               oldVideo.remove();
+//           }
+//           const node = document.createElement("video");
+//           videoDiv.setAttribute("class", "fill-container center-in-page");
+//           node.setAttribute("class", "fill-container center-in-page");
+//           node.setAttribute("autoplay","");
+//           node.setAttribute("controls","");
+//           node.setAttribute("src",serverPath);
+//           node.setAttribute("id","play-video");
+//           videoDiv.insertBefore(node, videoDiv.children[0]);
+//        }
+//    """
+//)
 
 private val emptyImageBitmap: ImageBitmap by lazy { ImageBitmap(1, 1) }
 
@@ -101,7 +105,12 @@ fun Slideshow(
             exitFullscreen()
         }
     }
-    Box(Modifier.fillMaxSize().background(Color(0x2200ff00))) {
+    Box(
+        Modifier.fillMaxSize()
+//        .background(Color(0x2200ff00))
+            .background(Color.Transparent)
+
+    ) {
         when (currentMedia) {
             is FileModel.Media.Image -> SlideshowShowImage(currentMedia, onNextClick)
             is FileModel.Media.Video -> SlideshowShowVideo(currentMedia)
@@ -123,7 +132,7 @@ fun Slideshow(
 @Composable
 fun ExitSlideshow(modifier: Modifier, onClick: () -> Unit) {
     Box(modifier = modifier) {
-        SlideshowButton("exit", onClick)
+        SlideshowButton(Res.drawable.ic_exit_128, onClick)
     }
 }
 
@@ -137,19 +146,19 @@ fun SlideshowControls(
 ) {
     Column(modifier = modifier) {
         Row {
-            SlideshowButton("delete", onDeleteClick)
-            SlideshowButton("fullscreen", onFullscreenClick)
+            SlideshowButton(Res.drawable.ic_delete_128, onDeleteClick)
+            SlideshowButton(Res.drawable.ic_fullscreen_128, onFullscreenClick)
         }
         Row {
-            SlideshowButton("previous", onPreviousClick)
-            SlideshowButton("next", onNextClick)
+            SlideshowButton(Res.drawable.ic_previous_128, onPreviousClick)
+            SlideshowButton(Res.drawable.ic_next_128, onNextClick)
         }
     }
 }
 
 @Composable
-fun SlideshowButton(assetName: String, onClick: () -> Unit) {
-    val painter = painterResourceCached("assets/ic_${assetName}_128.png")
+fun SlideshowButton(asset: DrawableResource, onClick: () -> Unit) {
+    val painter = painterResourceCached(asset)
     val interactionSource = remember { MutableInteractionSource() }
     Box(
         Modifier.size(40.dp)
@@ -157,8 +166,8 @@ fun SlideshowButton(assetName: String, onClick: () -> Unit) {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter,
-            contentDescription = assetName,
+            painter = painter,
+            contentDescription = null,
             modifier = Modifier.size(32.dp)
         )
     }
@@ -167,44 +176,22 @@ fun SlideshowButton(assetName: String, onClick: () -> Unit) {
 @Composable
 fun SlideshowShowVideo(video: FileModel.Media.Video) {
 //    Text("Video currently not supported $video")
-    playVideo(video.serverPath)
+//    playVideo(video.serverPath)
+    XShowVideo(video.serverPath, Modifier.fillMaxSize())
 }
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun SlideshowShowImage(image: FileModel.Media.Image, onNextClick: () -> Unit) {
-    val urlResource = remember(image.serverPath) { urlResource(image.serverPath) }
-    val rib = urlResource.rememberImageBitmap()
-    var isError by remember { mutableStateOf(false) }
-    var painter by remember { mutableStateOf(BitmapPainter(emptyImageBitmap)) }
     val interactionSource = remember { MutableInteractionSource() }
-    LaunchedEffect(image.serverPath, rib) {
-        when (rib) {
-            is LoadState.Success -> {
-                painter = BitmapPainter(rib.orEmpty())
-            }
-
-            is LoadState.Loading -> {
-                isError = false
-            }
-
-            is LoadState.Error -> {
-                painter = BitmapPainter(emptyImageBitmap)
-                isError = true
-            }
-        }
-    }
-    if (isError) {
-        Text("Issue loading image: $image")
-    } else {
-        Image(
-            painter,
-            image.shortName,
-            modifier = Modifier.fillMaxSize().clickable(
-                interactionSource = interactionSource,
-                indication = null,
-                onClick = onNextClick
-            )
+    AsyncImage(
+        model = image.serverPath,
+        contentDescription = image.shortName,
+        modifier = Modifier.fillMaxSize().clickable(
+            interactionSource = interactionSource,
+            indication = null,
+            onClick = onNextClick
         )
-    }
+    )
+
 }

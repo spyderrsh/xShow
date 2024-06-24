@@ -50,7 +50,8 @@ class MediaDbDataSource {
 
     // Updated putNewVideo and putNewImage methods
     suspend fun putNewVideo(transaction: Transaction, model: FileModel.Media.Video.Full) {
-        if (model.duration == null) {
+        val modelDuration = model.duration
+        if (modelDuration == null) {
             val message = "Issue checking file (corrupted?): ${model.path}"
             Logger.getGlobal().severe(message)
             throw IllegalArgumentException(message)
@@ -61,7 +62,7 @@ class MediaDbDataSource {
                 extension = model.extension
                 shortName = model.shortName
                 serverPath = model.serverPath
-                duration = model.duration
+                duration = modelDuration
             }
         }
     }

@@ -7,13 +7,14 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.CanvasBasedWindow
+import com.hamama.kwhi.LocalLayerContainer
 import com.spyderrsh.xshow.AppComponent.appViewModel
 import com.spyderrsh.xshow.filesystem.FileSystemBrowser
 import com.spyderrsh.xshow.slideshow.Slideshow
 import com.spyderrsh.xshow.style.XshowTheme
+import kotlinx.browser.document
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.configureWebResources
-import org.jetbrains.compose.resources.urlResource
 
 fun clearCanvasBackground(): Unit = js(
     """{
@@ -29,19 +30,22 @@ fun clearCanvasBackground(): Unit = js(
 fun main() {
     configureWebResources {
         // same as default - this is not necessary to add here. It's here to show this feature
-        setResourceFactory { urlResource("./$it") }
+//        resourcePathMapping { "./$it" }
+//        setResourceFactory { urlResource("./$it") }
     }
     // koin needs wasm support
 //    startKoin {
 //
 //    }
-    CanvasBasedWindow(title = "XShow", applyDefaultStyles = false) {
-        var invalidations by remember { mutableStateOf(0) }
-        MainWindow(appViewModel)
-        LaunchedEffect(invalidations) {
-            clearCanvasBackground()
-            if (invalidations < 1) {
-                invalidations++
+    CanvasBasedWindow(title = "XShow", applyDefaultStyles = true) {
+        CompositionLocalProvider(LocalLayerContainer provides document.body!!) {
+            var invalidations by remember { mutableStateOf(0) }
+            MainWindow(appViewModel)
+            LaunchedEffect(invalidations) {
+                clearCanvasBackground()
+                if (invalidations < 1) {
+                    invalidations++
+                }
             }
         }
     }
@@ -56,7 +60,10 @@ fun MainWindow(appViewModel: AppViewModel) {
             modifier = Modifier.fillMaxSize(),
             color = Color.Transparent
         ) {
-            XShow(appState, { appViewModel.startSlideshow(appState.rootFolder!!) }, { appViewModel.exitSlideshow() })
+            XShow(
+                appState = appState,
+                onPlayClick = { appViewModel.startSlideshow(appState.rootFolder!!) },
+                onCloseSlideshowClick = { appViewModel.exitSlideshow() })
         }
     }
 }

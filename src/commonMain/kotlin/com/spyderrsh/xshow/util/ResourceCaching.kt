@@ -1,27 +1,19 @@
+@file:OptIn(ExperimentalResourceApi::class)
+
 package com.spyderrsh.xshow.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
-import org.jetbrains.compose.resources.*
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 
-private val cache = mutableStateMapOf<String, Painter>()
+private val cache = mutableStateMapOf<DrawableResource, Painter>()
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-internal fun painterResourceCached(res: String): Painter {
-    return if (cache.containsKey(res)) {
-        cache[res]!!
-    } else {
-        val rib = resource(res).rememberImageBitmap()
-        if (rib !is LoadState.Success<ImageBitmap>) {
-            BitmapPainter(rib.orEmpty())
-        } else {
-            cache[res] = BitmapPainter(rib.orEmpty())
-            cache[res]!!
-        }
-    }
+internal fun painterResourceCached(res: DrawableResource): Painter {
+    return painterResource(res)
 }

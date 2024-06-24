@@ -36,7 +36,6 @@ afterEvaluate {
 }
 kotlin {
     jvmToolchain(17)
-
     wasmJs {
         moduleName = "xshow"
         browser {
@@ -73,6 +72,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":shared"))
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                implementation(compose.components.resources)
             }
         }
         val jsWasmMain by creating {
@@ -90,6 +91,8 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:3.0.0-wasm1")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.0-wasm1")
                 implementation("io.ktor:ktor-client-content-negotiation:3.0.0-wasm1")
+                implementation(project(":composeWebInterop"))
+                implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
 
             }
         }

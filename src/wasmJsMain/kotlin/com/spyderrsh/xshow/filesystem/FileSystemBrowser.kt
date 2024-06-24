@@ -1,7 +1,10 @@
+@file:OptIn(ExperimentalResourceApi::class)
+
 package com.spyderrsh.xshow.filesystem
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -12,8 +15,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.spyderrsh.xshow.AppState
+import com.spyderrsh.xshow.generated.resources.*
 import com.spyderrsh.xshow.model.FileModel
 import com.spyderrsh.xshow.util.painterResourceCached
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -65,12 +71,13 @@ fun FileSystemBrowser(state: FileSystemBrowserState, onFileClick: (FileModel) ->
 
 @Composable
 fun PlayButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    val playButtonIcon = painterResourceCached("assets/ic_play_128.png")
+    val playButtonIcon = painterResourceCached(Res.drawable.ic_play_128)
     val interactionSource = remember { MutableInteractionSource() }
     Image(
         painter = playButtonIcon,
         contentDescription = "Play Button",
         modifier = Modifier.size(64.dp)
+            .background(Color.Red)
             .then(modifier)
             .clickable(interactionSource, indication = null, onClick = onClick)
     )
@@ -110,10 +117,10 @@ fun ImageWithTitle(imageContent: @Composable () -> Unit, title: String) {
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ShowFolderFile(displayString: String, model: FileModel.Folder, onClick: () -> Unit) {
-    val vectorPainter = painterResourceCached("assets/ic_folder_128.png")
+    val vectorPainter = painterResourceCached(Res.drawable.ic_folder_128)
     ClickableRow(leftHandContent = {
         ImageWithTitle(
-            { Image(vectorPainter, "folder icon", modifier = Modifier.size(24.dp)) },
+            { Image(painter = vectorPainter, "folder icon", modifier = Modifier.size(24.dp)) },
             displayString
         )
     }) {
@@ -136,15 +143,15 @@ fun ClickableRow(leftHandContent: @Composable () -> Unit, onClick: () -> Unit) {
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ShowMediaFile(displayString: String, model: FileModel.Media, onClick: () -> Unit) {
-    val videoPainter = painterResourceCached("assets/ic_video_128.png")
-    val imagePainter = painterResourceCached("assets/ic_image_128.png")
+    val videoPainter = painterResourceCached(Res.drawable.ic_video_128)
+    val imagePainter = painterResourceCached(Res.drawable.ic_image_128)
     val isImage = remember { model is FileModel.Media.Image }
     ClickableRow(
         leftHandContent = {
             ImageWithTitle(
                 {
                     Image(
-                        if (isImage) {
+                        painter = if (isImage) {
                             imagePainter
                         } else {
                             videoPainter
@@ -152,6 +159,7 @@ fun ShowMediaFile(displayString: String, model: FileModel.Media, onClick: () -> 
                         contentDescription = if (isImage) {
                             "image icon"
                         } else "video icon",
+                        contentScale = ContentScale.FillWidth,
                         modifier = Modifier.size(24.dp)
                     )
                 },

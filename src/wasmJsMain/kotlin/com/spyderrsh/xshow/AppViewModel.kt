@@ -4,10 +4,14 @@ import com.spyderrsh.xshow.AppComponent.appScope
 import com.spyderrsh.xshow.model.FileModel
 import com.spyderrsh.xshow.redux.TypedReduxStore
 import com.spyderrsh.xshow.slideshow.SlideshowOptions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class AppViewModel(
-    private val stateStore: TypedReduxStore<AppState, AppAction>
+    private val stateStore: TypedReduxStore<AppState, AppAction>,
+    private val scope: CoroutineScope
 ) {
     fun startSlideshow(currentFolder: FileModel.Folder) {
         stateStore.dispatch { dispatch, getState ->
@@ -36,5 +40,8 @@ class AppViewModel(
                     }
             }
         }
+
+        appStateFlow.onEach { println("State updated: $it") }
+            .launchIn(scope)
     }
 }

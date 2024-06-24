@@ -6,6 +6,8 @@ import com.spyderrsh.xshow.util.XShowFileModelUtil
 import net.bramp.ffmpeg.FFprobe
 import org.jetbrains.exposed.sql.Transaction
 import java.io.File
+import java.util.logging.Level
+import java.util.logging.Logger
 import kotlin.time.Duration.Companion.seconds
 
 class DefaultVideoProcessor(
@@ -17,6 +19,8 @@ class DefaultVideoProcessor(
     override suspend fun process(transaction: Transaction, file: File) {
         mediaRepository.getOrPutProcessedVideo(transaction, file) {
             processInternal(file)
+        }.onFailure {
+            Logger.getGlobal().log(Level.WARNING, "Issue processing file: ${file.absolutePath}", it)
         }
     }
 

@@ -11,6 +11,7 @@ import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.experimental.withSuspendTransaction
 import java.io.File
+import java.util.logging.Level
 import java.util.logging.Logger
 
 class MediaDbDataSource {
@@ -30,30 +31,43 @@ class MediaDbDataSource {
         }
     }
 
-    suspend fun putNewVideo(transaction: Transaction, model: FileModel.Media.Video.Full) {
-        if (model.path.length > VideoTable.MAX_PATH_LENGTH) {
-            val message = "Video path is larger than allowed: ${model.path}"
+    // Helper method to handle common logic in putNewVideo and putNewImage
+    suspend fun putNewMedia(transaction: Transaction, model: FileModel.Media, maxLength: Int, putAction: () -> Unit) {
+        if (model.path.length > maxLength) {
+            val message = "Media path is larger than allowed: ${model.path}"
             Logger.getGlobal().severe(message)
             throw IllegalArgumentException(message)
         }
         transaction.withSuspendTransaction {
+            try {
+                putAction()
+            } catch (exception: Throwable) {
+                Logger.getGlobal().log(Level.WARNING, "Issue adding ${model.shortName} to database", exception)
+            }
+            Logger.getGlobal().info("Added ${model.shortName} to database")
+        }
+    }
+
+    // Updated putNewVideo and putNewImage methods
+    suspend fun putNewVideo(transaction: Transaction, model: FileModel.Media.Video.Full) {
+        if (model.duration == null) {
+            val message = "Issue checking file (corrupted?): ${model.path}"
+            Logger.getGlobal().severe(message)
+            throw IllegalArgumentException(message)
+        }
+        putNewMedia(transaction, model, VideoTable.MAX_PATH_LENGTH) {
             VideoDao.new {
                 path = model.path
                 extension = model.extension
                 shortName = model.shortName
                 serverPath = model.serverPath
-                duration = model.duration!! // throw error if we are trying to put without duration
+                duration = model.duration
             }
         }
     }
 
     suspend fun putNewImage(transaction: Transaction, model: FileModel.Media.Image) {
-        if (model.path.length > ImageTable.MAX_PATH_LENGTH) {
-            val message = "Video path is larger than allowed: ${model.path}"
-            Logger.getGlobal().severe(message)
-            throw IllegalArgumentException(message)
-        }
-        transaction.withSuspendTransaction {
+        putNewMedia(transaction, model, ImageTable.MAX_PATH_LENGTH) {
             ImageDao.new {
                 path = model.path
                 extension = model.extension

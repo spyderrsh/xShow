@@ -1,6 +1,6 @@
 {
-  "root": "C:/Users/Ryan Hintze/Videos",
+  "root": "C:/Media/all",
   "static_path" : "xstatic",
   "db_path": "C:/xshow/xshow.db",
-  "trash_path": "J:/.deleted/"
+  "trash_path": "C:/Media/.deleted/"
 }

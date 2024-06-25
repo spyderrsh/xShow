@@ -13,6 +13,7 @@ import com.spyderrsh.xshow.filesystem.FileSystemBrowser
 import com.spyderrsh.xshow.slideshow.Slideshow
 import com.spyderrsh.xshow.style.XshowTheme
 import kotlinx.browser.document
+import kotlinx.browser.window
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.configureWebResources
 
@@ -38,8 +39,13 @@ fun main() {
 //
 //    }
     CanvasBasedWindow(title = "XShow", applyDefaultStyles = true) {
+
         CompositionLocalProvider(LocalLayerContainer provides document.body!!) {
+
             var invalidations by remember { mutableStateOf(0) }
+            window.onresize = {
+                invalidations = 0
+            }
             MainWindow(appViewModel)
             LaunchedEffect(invalidations) {
                 clearCanvasBackground()
@@ -49,7 +55,6 @@ fun main() {
             }
         }
     }
-
 }
 
 @Composable
@@ -60,7 +65,8 @@ fun MainWindow(appViewModel: AppViewModel) {
             modifier = Modifier.fillMaxSize(),
             color = Color.Transparent
         ) {
-            XShow(
+
+        XShow(
                 appState = appState,
                 onPlayClick = { appViewModel.startSlideshow(appState.rootFolder!!) },
                 onCloseSlideshowClick = { appViewModel.exitSlideshow() })

@@ -15,6 +15,7 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev/")
 }
 
 // Versions
@@ -93,6 +94,9 @@ kotlin {
                 implementation("io.ktor:ktor-client-content-negotiation:3.0.0-wasm1")
                 implementation(project(":composeWebInterop"))
                 implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
+                implementation("io.coil-kt.coil3:coil-network-ktor:3.0.0-alpha06")
+//                implementation("org.jetbrains.skiko:skiko-wasm-js:0.8.9")
+
 
             }
         }

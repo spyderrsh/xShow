@@ -12,9 +12,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
+import coil3.request.ImageRequest
 import com.spyderrsh.xshow.AppState
 import com.spyderrsh.xshow.component.XShowVideo
 import com.spyderrsh.xshow.filesystem.ShowLoading
@@ -51,27 +52,6 @@ fun exitFullscreen(): Unit =
 fun isFullscreen(): Boolean =
     js("""document.fullscreen""")
 
-//fun playVideo(serverPath: String, videoContainerTag: String = "content"): Unit = js(
-//    """{
-//           const videoDiv = document.getElementById(videoContainerTag);
-//           const oldVideo = document.getElementById("play-video");
-//           if(oldVideo) {
-//               oldVideo.remove();
-//           }
-//           const node = document.createElement("video");
-//           videoDiv.setAttribute("class", "fill-container center-in-page");
-//           node.setAttribute("class", "fill-container center-in-page");
-//           node.setAttribute("autoplay","");
-//           node.setAttribute("controls","");
-//           node.setAttribute("src",serverPath);
-//           node.setAttribute("id","play-video");
-//           videoDiv.insertBefore(node, videoDiv.children[0]);
-//        }
-//    """
-//)
-
-private val emptyImageBitmap: ImageBitmap by lazy { ImageBitmap(1, 1) }
-
 @Composable
 fun Slideshow(appState: AppState, onCloseSlideshowClick: () -> Unit) {
     val viewModel = remember { SlideShowScopeComponent.slideShowViewModel }
@@ -107,7 +87,6 @@ fun Slideshow(
     }
     Box(
         Modifier.fillMaxSize()
-//        .background(Color(0x2200ff00))
             .background(Color.Transparent)
 
     ) {
@@ -175,8 +154,6 @@ fun SlideshowButton(asset: DrawableResource, onClick: () -> Unit) {
 
 @Composable
 fun SlideshowShowVideo(video: FileModel.Media.Video) {
-//    Text("Video currently not supported $video")
-//    playVideo(video.serverPath)
     XShowVideo(video.serverPath, Modifier.fillMaxSize())
 }
 
@@ -185,13 +162,16 @@ fun SlideshowShowVideo(video: FileModel.Media.Video) {
 fun SlideshowShowImage(image: FileModel.Media.Image, onNextClick: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
     AsyncImage(
-        model = image.serverPath,
+        model = ImageRequest.Builder(LocalPlatformContext.current)
+            .data("http://127.0.0.1:8080/${image.serverPath}").build(),
         contentDescription = image.shortName,
-        modifier = Modifier.fillMaxSize().clickable(
-            interactionSource = interactionSource,
-            indication = null,
-            onClick = onNextClick
-        )
+        modifier = Modifier.fillMaxSize()
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onNextClick
+            ),
+        onState = ::println
     )
 
 }

@@ -7,19 +7,17 @@ import com.spyderrsh.xshow.ui.ShowLoading
 import com.spyderrsh.xshow.ui.UnsupportedState
 import com.spyderrsh.xshow.ui.internalLink
 import io.kvision.core.*
-import io.kvision.html.*
+import io.kvision.html.div
+import io.kvision.html.image
+import io.kvision.html.span
 import io.kvision.modal.Modal
 import io.kvision.modal.ModalSize
 import io.kvision.panel.vPanel
 import io.kvision.state.bind
 import io.kvision.utils.event
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
-import org.w3c.dom.asList
-import org.w3c.dom.get
 
 private fun getViewModel(): FileSystemBrowserViewModel {
-    return FileSystemBrowserScopeComponent().fileSystemBrowserViewModel
+    return FileSystemBrowserScopeComponent.fileSystemBrowserViewModel
 }
 
 fun Container.FileSystemBrowser(folder: FileModel.Folder) {
@@ -64,7 +62,7 @@ fun Container.ShowFiles(state: FileSystemBrowserState) {
     span("Files For ${state.currentFolder?.path}")
     vPanel {
         if (state.currentFolder != null) {
-            ShowParentFolder(state.currentFolder)
+            ShowParentFolder(state.currentFolder!!)
         }
         state.currentFiles.forEach {
             ShowFile(it)
@@ -110,7 +108,7 @@ private fun Container.PlayButton() {
             height = CssSize(24, UNIT.pt)
             addCssClass("tint-icon")
             onClick {
-                AppComponent().appViewModel.startSlideshow(getViewModel().state.value.currentFolder!!)
+                AppComponent.appViewModel.startSlideshow(getViewModel().state.value.currentFolder!!)
             }
         }
     }

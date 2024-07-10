@@ -1,11 +1,10 @@
 package com.spyderrsh.xshow.slideshow
 
-import com.spyderrsh.xshow.AppComponent
 import com.spyderrsh.xshow.model.FileModel
 
 object SlideshowModel {
 
-    private val slideshowService = AppComponent.slideshowService
+    private val slideshowService = com.spyderrsh.xshow.AppComponent.slideshowService
 
     suspend fun getNextMedia() = slideshowService.nextMedia()
 

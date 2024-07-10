@@ -16,8 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.spyderrsh.app.generated.resources.*
 import com.spyderrsh.xshow.AppState
-import com.spyderrsh.xshow.generated.resources.*
 import com.spyderrsh.xshow.model.FileModel
 import com.spyderrsh.xshow.util.painterResourceCached
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -45,7 +45,7 @@ fun FileSystemBrowser(state: FileSystemBrowserState, onFileClick: (FileModel) ->
         }
         return
     }
-    val parentFolder = remember(state.currentFolder) { state.currentFolder.parentFolder }
+    val parentFolder = remember(state.currentFolder) { state.currentFolder!!.parentFolder }
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         LazyColumn(
             Modifier.fillMaxSize(),
@@ -54,7 +54,7 @@ fun FileSystemBrowser(state: FileSystemBrowserState, onFileClick: (FileModel) ->
             if (state.isLoading) {
                 item { ShowLoading() }
             }
-            item { FolderTitle(state.currentFolder) }
+            item { FolderTitle(state.currentFolder!!) }
             if (parentFolder != null) {
                 item { ShowParentFolder(parentFolder) { onFileClick(parentFolder) } }
             }

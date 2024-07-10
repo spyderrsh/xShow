@@ -12,8 +12,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.hamama.kwhi.HtmlView
-import com.spyderrsh.xshow.generated.resources.Res
-import com.spyderrsh.xshow.generated.resources.ic_play_128
+import com.spyderrsh.app.generated.resources.Res
+import com.spyderrsh.app.generated.resources.ic_play_128
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.dom.addClass

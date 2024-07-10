@@ -15,6 +15,9 @@ repositories {
 kotlin {
     jvmToolchain(17)
     jvm()
+    js(IR) {
+        browser()
+    }
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs() {
         browser()

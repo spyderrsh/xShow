@@ -19,14 +19,12 @@ repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
 }
 
-// Versions
-val koinVersion: String by System.getProperties()
-val ktorVersion: String by project
-val logbackVersion: String by project
-val exposedVersion: String by project
 
 kotlin {
     jvmToolchain(17)
+    js(IR) {
+
+    }
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         moduleName = "xshow"
@@ -52,10 +50,10 @@ kotlin {
 
                     static = (static ?: mutableListOf()).apply {
                         // Serve sources to debug inside browser
-                        add(project.rootDir.path)
-                        add(project.rootDir.path + "/src/jsMain/web/")
-                        add(project.rootDir.path + "/nonAndroidMain/")
-                        add(project.rootDir.path + "/webApp/")
+                        add(project.projectDir.path)
+                        add(project.projectDir.path + "/src/jsMain/web/")
+                        add(project.projectDir.path + "/nonAndroidMain/")
+                        add(project.projectDir.path + "/webApp/")
                     }
                 }
             }
@@ -66,6 +64,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":shared"))
+                implementation(project(":app:shared"))
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
             }
@@ -73,8 +72,8 @@ kotlin {
         val jsWasmMain by creating {
             dependsOn(commonMain)
             dependencies {
-                implementation(libs.kotlinx.coroutines)
-                implementation(libs.kotlinx.serialization)
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                implementation(compose.components.resources)
                 implementation(compose.runtime)
                 implementation(compose.ui)
                 implementation(compose.foundation)

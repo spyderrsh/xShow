@@ -31,7 +31,7 @@ class AppViewModel(
 
         stateStore.dispatch { dispatch, getState ->
             appScope.launch {
-                runCatching {Model.getRootFolder() }
+                runCatching { Model.getRootFolder() }
                     .onSuccess {
                         dispatch(AppAction.ReceivedRootFolder(it))
                     }

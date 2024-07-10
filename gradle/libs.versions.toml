@@ -124,6 +124,13 @@ ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.r
 ktor-client-java = { group = "io.ktor", name = "ktor-client-java", version.ref = "ktor" }
 ktor-client-js = { group = "io.ktor", name = "ktor-client-js", version.ref = "ktor" }
 
+kvision-core = { module = "io.kvision:kvision", version.ref = "kvision" }
+kvision-bootstrap = { module = "io.kvision:kvision-bootstrap", version.ref = "kvision" }
+kvision-toastify = { module = "io.kvision:kvision-toastify", version.ref = "kvision" }
+kvision-jquery = { module = "io.kvision:kvision-jquery", version.ref = "kvision" }
+kvision-state = { module = "io.kvision:kvision-state", version.ref = "kvision" }
+kvision-state-flow = { module = "io.kvision:kvision-state-flow", version.ref = "kvision" }
+kvision-redux-kotlin = { module = "io.kvision:kvision-redux-kotlin", version.ref = "kvision" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version = "4.12.0" }
 loggingInterceptor = { module = "com.squareup.okhttp3:logging-interceptor", version = "4.9.2" }
 
@@ -174,3 +181,5 @@ gradleVersionsPlugin = { id = "com.github.ben-manes.versions", version.ref = "gr
 shadowPlugin = { id = "com.github.johnrengelman.shadow", version.ref = "shadowPlugin" }
 kotlinterGradle = { id = "org.jmailen.gradle:kotlinter-gradle", version.ref = "kotlinterGradle" }
 sqlDelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
+
+kvision = { id = "io.kvision", version.ref = "kvision" }

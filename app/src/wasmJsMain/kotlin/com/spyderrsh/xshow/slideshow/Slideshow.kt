@@ -20,10 +20,10 @@ import coil3.request.ImageRequest
 import coil3.size.Precision
 import coil3.size.Scale
 import coil3.size.SizeResolver
+import com.spyderrsh.app.generated.resources.*
 import com.spyderrsh.xshow.AppState
 import com.spyderrsh.xshow.component.XShowVideo
 import com.spyderrsh.xshow.filesystem.ShowLoading
-import com.spyderrsh.xshow.generated.resources.*
 import com.spyderrsh.xshow.model.FileModel
 import com.spyderrsh.xshow.util.painterResourceCached
 import org.jetbrains.compose.resources.DrawableResource

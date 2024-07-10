@@ -13,7 +13,7 @@ import io.kvision.state.bind
 import kotlinx.browser.document
 
 private fun getViewModel(): SlideshowViewModel {
-    return SlideShowScopeComponent().slideShowViewModel
+    return SlideShowScopeComponent.slideShowViewModel
 }
 
 private val callbacks: MediaViewCallbacks = object : MediaViewCallbacks {
@@ -29,8 +29,8 @@ fun Container.Slideshow() {
         when {
             it.currentMedia == null -> ShowLoading()
             else -> {
-                ShowItem(it.currentMedia)
-                ShowOverlay(it.currentMedia)
+                ShowItem(it.currentMedia!!)
+                ShowOverlay(it.currentMedia!!)
             }
         }
         setFullscreen(it.fullscreen)
@@ -124,6 +124,6 @@ fun Container.FullscreenButton() {
 
 fun Container.ExitButton() {
     ImageButton("assets/exit.svg", onClick = {
-        AppComponent().appViewModel.exitSlideshow()
+        AppComponent.appViewModel.exitSlideshow()
     })
 }

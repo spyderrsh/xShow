@@ -31,3 +31,5 @@ build/
 .gradle/
 /logs/archived/
 /.kotlin-js-store/yarn.lock
+/server/logs/archived/*.log.gz
+/.kotlin/

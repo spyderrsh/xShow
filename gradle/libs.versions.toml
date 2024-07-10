@@ -1,0 +1,185 @@
+[versions]
+kotlin = "2.0.20-Beta1"
+ksp = "2.0.20-Beta1-1.0.22"
+coroutines = "1.8.0"
+kotlinxSerialization = "1.6.2"
+kotlinxDateTime = "0.5.0"
+androidGradlePlugin = "8.2.0"
+koin = "3.5.3"
+koinCompose = "3.5.3"
+ktor = "2.3.12"
+ktor-wasm = "3.0.0-wasm2"
+slf4j = "2.0.9"
+sqlDelight = "2.0.1"
+kmpNativeCoroutines = "1.0.0-ALPHA-23"
+coil3 = "3.0.0-alpha07"
+jbComposeCompiler = "1.5.14"
+compose-wasm = "1.6.11"
+
+kvision = "7.5.1"
+
+androidxActivity = "1.8.2"
+androidxComposeCompiler = "1.5.5-dev-k1.9.21-163bb051fe5"
+androidxComposeBom = "2023.10.01"
+androidxNavigationCompose = "2.7.6"
+wearCompose = "1.2.1"
+androidxLifecycle = "2.6.2"
+imageLoader = "1.7.1"
+osmdroidAndroid = "6.1.18"
+
+composeMultiplatform = "1.6.0-alpha01"
+accompanist = "0.32.0"
+horologist = "0.5.14"
+glanceWearTiles = "1.0.0-alpha05"
+glanceAppWidget = "1.0.0"
+
+junit = "4.13.2"
+androidxTestJUnit = "1.1.5"
+robolectric = "4.11.1"
+androidxTestCore = "1.5.0"
+mockito = "3.11.2"
+
+multiplatformSettings = "1.1.1"
+kermit = "2.0.2"
+
+gradleVersionsPlugin = "0.50.0"
+shadowPlugin = "7.0.0"
+kotlinterGradle = "3.4.5"
+
+minSdk = "24"
+minWearSdk = "26"
+targetSdk = "34"
+compileSdk = "34"
+
+
+[libraries]
+kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDateTime" }
+kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
+
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
+androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout" }
+androidx-compose-material = { group = "androidx.compose.material", name = "material" }
+androidx-compose-material-iconsExtended = { group = "androidx.compose.material", name = "material-icons-extended" }
+androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
+androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-material3-WindowSizeClass = { group = "androidx.compose.material3", name = "material3-window-size-class" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidxNavigationCompose" }
+androidx-lifecycle-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
+androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
+androidx-tracing = "androidx.tracing:tracing:1.2.0"
+
+splash-screen = "androidx.core:core-splashscreen:1.0.1"
+metrics = "androidx.metrics:metrics-performance:1.0.0-alpha02"
+
+imageLoader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "imageLoader" }
+osmdroidAndroid = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroidAndroid" }
+
+wear-compose-founndation = { module = "androidx.wear.compose:compose-foundation", version.ref = "wearCompose" }
+wear-compose-material = { module = "androidx.wear.compose:compose-material", version.ref = "wearCompose" }
+wear-compose-navigation = { module = "androidx.wear.compose:compose-navigation", version.ref = "wearCompose" }
+
+accompanist-swiperefresh = { group = "com.google.accompanist", name = "accompanist-swiperefresh", version.ref = "accompanist" }
+accompanist-placeholder = { group = "com.google.accompanist", name = "accompanist-placeholder-material3", version.ref = "accompanist" }
+horologist-compose-layout = { module = "com.google.android.horologist:horologist-compose-layout", version.ref = "horologist" }
+
+glance-tiles = { module = "androidx.glance:glance-wear-tiles", version.ref = "glanceWearTiles" }
+glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glanceAppWidget" }
+
+androidx-navigation-compose-testing = { module = "androidx.navigation:navigation-testing", version.ref = "androidxNavigationCompose" }
+
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinCompose" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
+koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
+
+ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
+ktor-server-auth = { group = "io.ktor", name = "ktor-server-auth", version.ref = "ktor" }
+ktor-server-compression = { group = "io.ktor", name = "ktor-server-compression", version.ref = "ktor" }
+ktor-server-content-negotiation = { group = "io.ktor", name = "ktor-server-content-negotiation", version.ref = "ktor" }
+ktor-server-cors = { group = "io.ktor", name = "ktor-server-cors", version.ref = "ktor" }
+ktor-server-partial-content = { group = "io.ktor", name = "ktor-server-partial-content", version.ref = "ktor" }
+ktor-server-websockets = { group = "io.ktor", name = "ktor-server-websockets", version.ref = "ktor" }
+ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-json = { group = "io.ktor", name = "ktor-client-json", version.ref = "ktor" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktor-client-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-wasm-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor-wasm" }
+ktor-wasm-client-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor-wasm" }
+ktor-wasm-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor-wasm" }
+ktor-wasm-events = { group = "io.ktor", name = "ktor-events-wasm-js", version.ref = "ktor-wasm" }
+ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
+ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
+ktor-client-java = { group = "io.ktor", name = "ktor-client-java", version.ref = "ktor" }
+ktor-client-js = { group = "io.ktor", name = "ktor-client-js", version.ref = "ktor" }
+
+kvision-core = { module = "io.kvision:kvision", version.ref = "kvision" }
+kvision-bootstrap = { module = "io.kvision:kvision-bootstrap", version.ref = "kvision" }
+kvision-toastify = { module = "io.kvision:kvision-toastify", version.ref = "kvision" }
+kvision-jquery = { module = "io.kvision:kvision-jquery", version.ref = "kvision" }
+kvision-state = { module = "io.kvision:kvision-state", version.ref = "kvision" }
+kvision-state-flow = { module = "io.kvision:kvision-state-flow", version.ref = "kvision" }
+kvision-redux-kotlin = { module = "io.kvision:kvision-redux-kotlin", version.ref = "kvision" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version = "4.12.0" }
+loggingInterceptor = { module = "com.squareup.okhttp3:logging-interceptor", version = "4.9.2" }
+
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+slf4j = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j" }
+
+sqldelight-runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqlDelight" }
+sqldelight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqlDelight" }
+sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
+sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
+sqldelight-native-driver-macos = { module = "app.cash.sqldelight:native-driver-macosarm64", version.ref = "sqlDelight" }
+sqldelight-sqlite-driver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqlDelight" }
+
+multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
+multiplatform-settings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatformSettings" }
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+
+
+junit = { module = "junit:junit", version.ref = "junit" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+mockito = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
+androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestJUnit" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidxTestCore" }
+androidx-compose-ui-test = { group = "androidx.compose.ui", name = "ui-test" }
+androidx-compose-ui-test-junit = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil3" }
+coil-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor", version.ref = "coil3" }
+
+
+[bundles]
+multiplatformSettings = ["multiplatform-settings", "multiplatform-settings-coroutines"]
+#ktor-common = ["ktor-client-core", "ktor-client-json", "ktor-client-logging", "ktor-client-serialization", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"]
+
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-wasm" }
+kmpNativeCoroutines = { id = "com.rickclephas.kmp.nativecoroutines", version.ref = "kmpNativeCoroutines" }
+gradleVersionsPlugin = { id = "com.github.ben-manes.versions", version.ref = "gradleVersionsPlugin" }
+shadowPlugin = { id = "com.github.johnrengelman.shadow", version.ref = "shadowPlugin" }
+kotlinterGradle = { id = "org.jmailen.gradle:kotlinter-gradle", version.ref = "kotlinterGradle" }
+sqlDelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
+
+kvision = { id = "io.kvision", version.ref = "kvision" }

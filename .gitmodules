@@ -1,0 +1,3 @@
+[submodule "composeWebInterop"]
+	path = composeWebInterop
+	url = https://github.com/Hamamas/Kotlin-Wasm-Html-Interop/

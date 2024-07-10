@@ -13,10 +13,13 @@ slf4j = "2.0.9"
 sqlDelight = "2.0.1"
 kmpNativeCoroutines = "1.0.0-ALPHA-23"
 coil3 = "3.0.0-alpha07"
+jbComposeCompiler = "1.5.14"
+compose-wasm = "1.6.11"
+
+kvision = "7.5.1"
 
 androidxActivity = "1.8.2"
 androidxComposeCompiler = "1.5.5-dev-k1.9.21-163bb051fe5"
-jbComposeCompiler = "1.5.4"
 androidxComposeBom = "2023.10.01"
 androidxNavigationCompose = "2.7.6"
 wearCompose = "1.2.1"
@@ -161,8 +164,11 @@ multiplatformSettings = ["multiplatform-settings", "multiplatform-settings-corou
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-wasm" }
 kmpNativeCoroutines = { id = "com.rickclephas.kmp.nativecoroutines", version.ref = "kmpNativeCoroutines" }
 gradleVersionsPlugin = { id = "com.github.ben-manes.versions", version.ref = "gradleVersionsPlugin" }
 shadowPlugin = { id = "com.github.johnrengelman.shadow", version.ref = "shadowPlugin" }

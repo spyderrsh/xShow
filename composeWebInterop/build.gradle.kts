@@ -1,10 +1,9 @@
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
-    val kotlinVersion: String by System.getProperties()
-    kotlin("multiplatform") version kotlinVersion
-    id("org.jetbrains.compose")
-    id("org.jetbrains.kotlin.plugin.compose") version kotlinVersion
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.jetbrains.compose)
 }
 
 repositories {

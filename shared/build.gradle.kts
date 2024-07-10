@@ -1,9 +1,8 @@
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
-    val kotlinVersion: String by System.getProperties()
-    kotlin("plugin.serialization") version kotlinVersion
-    kotlin("multiplatform") version kotlinVersion
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.multiplatform)
 }
 
 group = "com.spyderrsh.xshow"

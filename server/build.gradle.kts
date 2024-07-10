@@ -1,7 +1,6 @@
 plugins {
-    val kotlinVersion: String by System.getProperties()
-    kotlin("jvm")
-    kotlin("plugin.serialization") version kotlinVersion
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
     application
 }
 

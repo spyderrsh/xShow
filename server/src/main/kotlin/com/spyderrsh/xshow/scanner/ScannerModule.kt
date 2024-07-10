@@ -1,5 +1,6 @@
 package com.spyderrsh.xshow.scanner
 
+import net.bramp.ffmpeg.FFmpeg
 import net.bramp.ffmpeg.FFprobe
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.createdAtStart
@@ -27,6 +28,9 @@ val ScannerModule = module {
     singleOf(::DefaultImageProcessor) {
         createdAtStart()
         bind<ImageProcessor>()
+    }
+    single { FFmpeg() }.withOptions {
+        createdAtStart()
     }
     single { FFprobe() }.withOptions {
         createdAtStart()

@@ -11,7 +11,6 @@ import com.hamama.kwhi.LocalLayerContainer
 import com.spyderrsh.xshow.AppComponent.appViewModel
 import com.spyderrsh.xshow.filesystem.FileSystemBrowser
 import com.spyderrsh.xshow.slideshow.Slideshow
-import com.spyderrsh.xshow.style.XshowTheme
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -60,17 +59,15 @@ fun main() {
 @Composable
 fun MainWindow(appViewModel: AppViewModel) {
     val appState by appViewModel.appStateFlow.collectAsState(AppState())
-    XshowTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = Color.Transparent
-        ) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color.Transparent
+    ) {
 
         XShow(
-                appState = appState,
-                onPlayClick = { appViewModel.startSlideshow(appState.rootFolder!!) },
-                onCloseSlideshowClick = { appViewModel.exitSlideshow() })
-        }
+            appState = appState,
+            onPlayClick = { appViewModel.startSlideshow(appState.rootFolder!!) },
+            onCloseSlideshowClick = { appViewModel.exitSlideshow() })
     }
 }
 

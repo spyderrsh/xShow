@@ -1,5 +1,6 @@
 package com.spyderrsh.xshow.media
 
+import com.spyderrsh.xshow.ServerConfig
 import com.spyderrsh.xshow.db.MediaDbDataSource
 import com.spyderrsh.xshow.db.dao.ImageDao
 import com.spyderrsh.xshow.db.dao.VideoDao
@@ -13,7 +14,8 @@ import kotlin.time.Duration
 
 class DefaultMediaRepository(
     private val mediaDbDataSource: MediaDbDataSource,
-    private val dispatchers: XShowDispatchers
+    private val dispatchers: XShowDispatchers,
+    private val config: ServerConfig
 ) : MediaRepository {
     override suspend fun getOrPutProcessedVideo(
         transaction: Transaction,
@@ -63,12 +65,14 @@ class DefaultMediaRepository(
                 if (videos) {
                     if (!clips) {
                         mediaDbDataSource.getAllVideosInDir(this, rootPath)
+                            .filter { it.isSupportedExtension() }
                             .mapTo(collection) {
                                 it.toFullVideoModel()
                             }
 
                     } else {
                         mediaDbDataSource.getAllVideosInDir(this, rootPath)
+                            .filter { it.isSupportedExtension() }
                             .flatMapTo(collection) {
                                 it.toFullVideoModel().transformToVideoPlusClips(clipDuration)
                             }
@@ -76,6 +80,16 @@ class DefaultMediaRepository(
                 }
             }
             collection
+        }
+    }
+
+    override suspend fun getAllUnsupportedVideos(): Result<Collection<FileModel.Media.Video.Full>> = runCatching {
+        withContext(dispatchers.io) {
+            newSuspendedTransaction {
+                mediaDbDataSource.getAllVideosInDir(this, config.rootFolderPath)
+                    .filterNot { it.isSupportedExtension() }
+                    .map { it.toFullVideoModel() }
+            }
         }
     }
 
@@ -114,6 +128,10 @@ class DefaultMediaRepository(
             extension = extension
         )
     }
+}
+
+private fun VideoDao.isSupportedExtension(): Boolean {
+    return extension.lowercase() == "mp4" || extension == "mkv"
 }
 
 private fun FileModel.Media.Video.Full.transformToVideoPlusClips(clipDuration: Duration): Iterable<FileModel.Media> {

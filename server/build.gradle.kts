@@ -8,10 +8,6 @@ plugins {
 group = "com.spyderrsh.xshow"
 version = "1.0.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 }
@@ -33,14 +29,14 @@ val mainClassName = "io.ktor.server.netty.EngineMain"
 dependencies {
     implementation(kotlin("reflect"))
     implementation(project(":shared"))
-    implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    implementation("io.ktor:ktor-server-auth:$ktorVersion")
-    implementation("io.ktor:ktor-server-compression:$ktorVersion")
-    implementation("io.ktor:ktor-server-cors:$ktorVersion")
-    implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
-    implementation("io.ktor:ktor-server-partial-content:$ktorVersion")
-    implementation("io.ktor:ktor-server-websockets:$ktorVersion")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.server.auth)
+    implementation(libs.ktor.server.compression)
+    implementation(libs.ktor.server.cors)
+    implementation(libs.ktor.server.content.negotiation)
+    implementation(libs.ktor.server.partial.content)
+    implementation(libs.ktor.server.websockets)
+    implementation(libs.ktor.serialization)
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("net.bramp.ffmpeg:ffmpeg:0.8.0")
 
@@ -50,7 +46,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
-    implementation("org.xerial:sqlite-jdbc:3.30.1")
+    implementation("org.xerial:sqlite-jdbc:3.41.2.2")
 
     api("io.insert-koin:koin-logger-slf4j:$koinVersion")
     api("io.insert-koin:koin-ktor:$koinVersion")

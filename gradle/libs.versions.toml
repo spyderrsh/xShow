@@ -1,16 +1,18 @@
 [versions]
-kotlin = "1.9.21"
-ksp = "1.9.21-1.0.16"
-coroutines = "1.8.0-RC"
+kotlin = "2.0.20-Beta1"
+ksp = "2.0.20-Beta1-1.0.22"
+coroutines = "1.8.0"
 kotlinxSerialization = "1.6.2"
 kotlinxDateTime = "0.5.0"
 androidGradlePlugin = "8.2.0"
 koin = "3.5.3"
 koinCompose = "3.5.3"
-ktor = "2.3.7"
+ktor = "2.3.12"
+ktor-wasm = "3.0.0-wasm2"
 slf4j = "2.0.9"
 sqlDelight = "2.0.1"
 kmpNativeCoroutines = "1.0.0-ALPHA-23"
+coil3 = "3.0.0-alpha07"
 
 androidxActivity = "1.8.2"
 androidxComposeCompiler = "1.5.5-dev-k1.9.21-163bb051fe5"
@@ -24,7 +26,6 @@ osmdroidAndroid = "6.1.18"
 
 composeMultiplatform = "1.6.0-alpha01"
 accompanist = "0.32.0"
-coilCompose = "2.5.0"
 horologist = "0.5.14"
 glanceWearTiles = "1.0.0-alpha05"
 glanceAppWidget = "1.0.0"
@@ -82,7 +83,6 @@ wear-compose-founndation = { module = "androidx.wear.compose:compose-foundation"
 wear-compose-material = { module = "androidx.wear.compose:compose-material", version.ref = "wearCompose" }
 wear-compose-navigation = { module = "androidx.wear.compose:compose-navigation", version.ref = "wearCompose" }
 
-coilCompose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilCompose" }
 accompanist-swiperefresh = { group = "com.google.accompanist", name = "accompanist-swiperefresh", version.ref = "accompanist" }
 accompanist-placeholder = { group = "com.google.accompanist", name = "accompanist-placeholder-material3", version.ref = "accompanist" }
 horologist-compose-layout = { module = "com.google.android.horologist:horologist-compose-layout", version.ref = "horologist" }
@@ -98,11 +98,24 @@ koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin" }
 
+ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
+ktor-server-auth = { group = "io.ktor", name = "ktor-server-auth", version.ref = "ktor" }
+ktor-server-compression = { group = "io.ktor", name = "ktor-server-compression", version.ref = "ktor" }
+ktor-server-content-negotiation = { group = "io.ktor", name = "ktor-server-content-negotiation", version.ref = "ktor" }
+ktor-server-cors = { group = "io.ktor", name = "ktor-server-cors", version.ref = "ktor" }
+ktor-server-partial-content = { group = "io.ktor", name = "ktor-server-partial-content", version.ref = "ktor" }
+ktor-server-websockets = { group = "io.ktor", name = "ktor-server-websockets", version.ref = "ktor" }
+ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 ktor-client-json = { group = "io.ktor", name = "ktor-client-json", version.ref = "ktor" }
 ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 ktor-client-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor" }
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-wasm-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor-wasm" }
+ktor-wasm-client-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor-wasm" }
+ktor-wasm-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor-wasm" }
+ktor-wasm-events = { group = "io.ktor", name = "ktor-events-wasm-js", version.ref = "ktor-wasm" }
 ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
 ktor-client-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
 ktor-client-java = { group = "io.ktor", name = "ktor-client-java", version.ref = "ktor" }
@@ -135,10 +148,13 @@ androidx-compose-ui-test = { group = "androidx.compose.ui", name = "ui-test" }
 androidx-compose-ui-test-junit = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil3" }
+coil-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor", version.ref = "coil3" }
+
 
 [bundles]
 multiplatformSettings = ["multiplatform-settings", "multiplatform-settings-coroutines"]
-ktor-common = ["ktor-client-core", "ktor-client-json", "ktor-client-logging", "ktor-client-serialization", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"]
+#ktor-common = ["ktor-client-core", "ktor-client-json", "ktor-client-logging", "ktor-client-serialization", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"]
 
 
 [plugins]

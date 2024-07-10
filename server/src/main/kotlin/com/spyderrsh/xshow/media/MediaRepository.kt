@@ -27,4 +27,5 @@ interface MediaRepository {
     ): Result<Collection<FileModel.Media>>
 
     suspend fun deleteItem(transaction: Transaction, media: FileModel.Media): Result<Unit>
+    suspend fun getAllUnsupportedVideos(): Result<Collection<FileModel.Media.Video.Full>>
 }

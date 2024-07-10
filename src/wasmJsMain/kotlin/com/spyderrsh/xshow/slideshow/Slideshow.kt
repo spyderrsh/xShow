@@ -12,10 +12,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
+import coil3.size.Precision
+import coil3.size.Scale
+import coil3.size.SizeResolver
 import com.spyderrsh.xshow.AppState
 import com.spyderrsh.xshow.component.XShowVideo
 import com.spyderrsh.xshow.filesystem.ShowLoading
@@ -163,7 +167,11 @@ fun SlideshowShowImage(image: FileModel.Media.Image, onNextClick: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
     AsyncImage(
         model = ImageRequest.Builder(LocalPlatformContext.current)
-            .data("http://127.0.0.1:8080/${image.serverPath}").build(),
+            .data("http://192.168.1.84:8080/${image.serverPath}")
+            .precision(Precision.EXACT)
+            .scale(Scale.FILL)
+            .size(SizeResolver.ORIGINAL).build(),
+        filterQuality = FilterQuality.Medium,
         contentDescription = image.shortName,
         modifier = Modifier.fillMaxSize()
             .clickable(

@@ -1,4 +1,5 @@
 import org.jetbrains.compose.ComposeExtension
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
@@ -6,6 +7,7 @@ plugins {
     kotlin("plugin.serialization") version kotlinVersion
     kotlin("multiplatform") version kotlinVersion
     id("org.jetbrains.compose")
+    id("org.jetbrains.kotlin.plugin.compose") version kotlinVersion
 }
 
 version = "1.0.0-SNAPSHOT"
@@ -16,6 +18,7 @@ repositories {
     mavenLocal()
     maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev/")
+    maven("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
 }
 
 // Versions
@@ -30,17 +33,17 @@ afterEvaluate {
     extensions.findByType(ComposeExtension::class.java)?.apply {
         val kotlinGeneration = project.property("kotlin.generation")
         val composeCompilerVersion = project.property("compose.compiler.version.$kotlinGeneration") as String
-        kotlinCompilerPlugin.set(composeCompilerVersion)
         val kotlinVersion = project.property("kotlin.version.$kotlinGeneration") as String
-        kotlinCompilerPluginArgs.add("suppressKotlinVersionCompatibilityCheck=$kotlinVersion")
     }
 }
 kotlin {
     jvmToolchain(17)
+    @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         moduleName = "xshow"
         browser {
             commonWebpackConfig {
+                outputFileName = "xshow.js"
                 devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
                     // Uncomment and configure this if you want to open a browser different from the system default
                     // open = mapOf(
@@ -48,11 +51,12 @@ kotlin {
                     //         "name" to "google chrome"
                     //     )
                     // )
-                    proxy = (proxy ?: mutableMapOf()).apply {
-                        put(
-                            "/xstatic/*", mapOf(
-                                "target" to "http://localhost:8080",
-                                "router" to "http://localhost:8081",
+                    proxy = (proxy ?: mutableListOf()).apply {
+
+                        add(
+                            KotlinWebpackConfig.DevServer.Proxy(
+                                mutableListOf("/xstatic"),
+                                "http://localhost:8080"
                             )
                         )
                     }
@@ -78,6 +82,7 @@ kotlin {
             }
         }
         val jsWasmMain by creating {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.kotlinx.coroutines)
                 implementation(libs.kotlinx.serialization)
@@ -89,24 +94,19 @@ kotlin {
                 implementation(compose.components.resources)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.material3)
-                implementation("io.ktor:ktor-client-core:3.0.0-wasm1")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.0-wasm1")
-                implementation("io.ktor:ktor-client-content-negotiation:3.0.0-wasm1")
+                implementation(libs.ktor.wasm.client.core)
+                implementation(libs.ktor.wasm.client.serialization)
+                implementation(libs.ktor.wasm.client.content.negotiation)
+//                implementation(libs.ktor.wasm.events)
                 implementation(project(":composeWebInterop"))
-                implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha06")
-                implementation("io.coil-kt.coil3:coil-network-ktor:3.0.0-alpha06")
+                implementation(libs.coil.compose)
+                implementation(libs.coil.ktor)
 //                implementation("org.jetbrains.skiko:skiko-wasm-js:0.8.9")
 
 
             }
         }
 
-        val wasmJsMain by getting {
-            dependsOn(jsWasmMain)
-        }
+        wasmJsMain.get().dependsOn(jsWasmMain)
     }
-}
-
-compose.experimental {
-    web.application {}
 }

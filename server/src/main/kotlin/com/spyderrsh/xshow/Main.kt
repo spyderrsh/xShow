@@ -1,5 +1,7 @@
 package com.spyderrsh.xshow
 
+import com.spyderrsh.xshow.converter.VideoConverter
+import com.spyderrsh.xshow.converter.VideoConverterModule
 import com.spyderrsh.xshow.db.DatabaseInitializer
 import com.spyderrsh.xshow.db.MediaDbDataSource
 import com.spyderrsh.xshow.media.DefaultMediaRepository
@@ -83,10 +85,11 @@ fun Application.main() {
 
     environment.monitor.subscribe(DirectoryScanner.DirectoryScanFinished) {
         startSlideshowSession()
+        startVideoConverter()
     }
 
     val module = module {
-        includes(ScannerModule, UtilModule, SlideshowModule)
+        includes(ScannerModule, UtilModule, SlideshowModule, VideoConverterModule)
         singleOf(::DefaultServerConfig) {
             createdAtStart()
             bind<ServerConfig>()
@@ -123,6 +126,12 @@ fun Application.startSlideshowSession() {
     log.info("Starting Slideshow Session Manager")
     val slideshowSessionManager by inject<SlideshowSessionManager>()
     slideshowSessionManager.initialize()
+}
+
+fun Application.startVideoConverter() {
+    val videoConverter by inject<VideoConverter>()
+    videoConverter.start()
+
 }
 
 fun Application.startDirAnalyzer() {

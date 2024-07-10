@@ -9,6 +9,7 @@ pluginManagement {
             maven("https://androidx.dev/storage/compose-compiler/repository")
             maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
             maven("https://maven.pkg.jetbrains.space/public/p/compose/dev/")
+            maven("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
         }
     }
 

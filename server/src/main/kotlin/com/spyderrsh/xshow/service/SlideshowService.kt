@@ -42,7 +42,7 @@ fun ISlideshowService.setupRouting(routing: Routing) {
         runCatching {
             call.receive<FileModel.Media>()
         }.onSuccess { mediaToDelete ->
-            launch {
+            this.application.launch {
                 runCatching {
                     deleteMedia(mediaToDelete)
                 }.onSuccess {
